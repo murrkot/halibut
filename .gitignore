@@ -1,5 +1,20 @@
-.idea
-.classpath
-.project
-.settings/
+# Maven
 target/
+halibut-client/target
+halibut-server/target
+halibut-shared/target
+*.class
+
+# GWT
+**/gwt-unitCache/
+**/www-test/
+.gwt/
+war/
+*.symbolMap
+
+# IDEs
+.idea/
+.settings/
+.project
+.classpath
+*.iml
