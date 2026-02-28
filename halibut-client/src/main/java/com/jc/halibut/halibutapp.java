@@ -1,4 +1,4 @@
-package com.jc;
+package com.jc.halibut;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;

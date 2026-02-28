@@ -1,4 +1,4 @@
-package com.jc;
+package com.jc.halibut;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

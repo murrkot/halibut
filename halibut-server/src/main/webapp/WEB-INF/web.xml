@@ -6,7 +6,7 @@
 	<!-- Servlets -->
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.jc.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.jc.halibut.GreetingServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

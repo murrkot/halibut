@@ -1,4 +1,4 @@
-package com.jc;
+package com.jc.halibut;
 
 /**
  * <p>
