@@ -11,7 +11,7 @@
 
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/halibutapp/greet</url-pattern>
+    <url-pattern>/happ/greet</url-pattern>
   </servlet-mapping>
 
 	<!-- Default page to serve -->

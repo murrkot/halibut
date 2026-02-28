@@ -106,8 +106,8 @@
                 <groupId>net.ltgt.gwt.maven</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <configuration>
-                    <moduleName>com.jc.halibut.halibutapp</moduleName>
-                    <moduleShortName>halibutapp</moduleShortName>
+                    <moduleName>com.jc.halibut.HApp</moduleName>
+                    <moduleShortName>happ</moduleShortName>
                 </configuration>
             </plugin>
         </plugins>
