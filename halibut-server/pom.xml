@@ -11,6 +11,16 @@
   <artifactId>halibut-server</artifactId>
   <packaging>war</packaging>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>32.1.3-jre</version> <!-- or latest stable version -->
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -25,6 +35,19 @@
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <!-- Core Guice Library -->
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>7.0.0</version>
+    </dependency>
+
+    <!-- Guice Servlet Extension (Required for GWT-RPC/Servlets) -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-servlet</artifactId>
+      <version>7.0.0</version>
     </dependency>
   </dependencies>
 
@@ -45,7 +68,7 @@
 
   <profiles>
     <profile>
-      <!-- XXX: We want to exclude halibut-client from 'env-dev' profile, Maven forces us to make a 'env-prod' profile -->
+      <!-- XXX: We want to exclude halibut-client from 'env-dev' profile, Maven forces us to make an 'env-prod' profile -->
       <id>env-prod</id>
       <activation>
         <activeByDefault>true</activeByDefault>
