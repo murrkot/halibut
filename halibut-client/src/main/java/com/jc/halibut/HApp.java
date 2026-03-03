@@ -9,13 +9,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
+import com.jc.halibut.uilib.BluePanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -39,6 +34,9 @@ public class HApp implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		final BluePanel mainPanel = new BluePanel();
+		final HorizontalPanel sendPanel = new HorizontalPanel();
+		final VerticalPanel responsePanel = new VerticalPanel();
 		final Button sendButton = new Button("SEND");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
@@ -47,11 +45,13 @@ public class HApp implements EntryPoint {
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
-		RootPanel.get("sendButtonContainer").add(sendButton);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
+		mainPanel.add(sendPanel);
+		sendPanel.add(nameField);
+		sendPanel.add(sendButton);
+		mainPanel.add(responsePanel);
+
+
+		RootPanel.get().add(mainPanel);
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
@@ -145,6 +145,7 @@ public class HApp implements EntryPoint {
 										.toSafeHtml());
 								dialogBox.center();
 								closeButton.setFocus(true);
+								responsePanel.add(dialogVPanel);
 							}
 						});
 			}
