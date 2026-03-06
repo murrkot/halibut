@@ -183,3 +183,199 @@ html, body {
     color: var(--input-text) !important;
     border-color: var(--input-border) !important;
 }
+
+/* Dashboard layout: top 10%, center 70%, bottom 20% */
+.halibut-dashboard {
+    height: calc(100vh - 24px);
+    margin: 12px;
+    border: 1px solid var(--page-border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--page-bg);
+}
+
+.halibut-dashboard-top {
+    flex: 0 0 10%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--page-border);
+    padding: 8px;
+}
+
+.halibut-dashboard-menu {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+}
+
+.halibut-dashboard-menu .gwt-Button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 10px;
+    background-color: #2a3442;
+    color: var(--text);
+    border: 1px solid #3d4b5f;
+    border-radius: 6px;
+}
+
+.halibut-dashboard-menu .gwt-Button:hover {
+    background-color: #344257;
+}
+
+.halibut-dashboard-center {
+    flex: 0 0 70%;
+    display: flex;
+    border-bottom: 1px solid var(--page-border);
+}
+
+.halibut-dashboard-col {
+    padding: 12px;
+    overflow: auto;
+}
+
+.halibut-dashboard-col-left {
+    flex: 0 0 10%;
+    border-right: 1px solid var(--page-border);
+}
+
+.halibut-dashboard-col-main {
+    flex: 0 0 70%;
+    border-right: 1px solid var(--page-border);
+}
+
+.halibut-dashboard-col-right {
+    flex: 0 0 20%;
+}
+
+.halibut-dashboard-bottom {
+    flex: 0 0 20%;
+    padding: 12px;
+    overflow: auto;
+}
+
+.halibut-dashboard h3 {
+    margin: 0;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+/* Bottom action menu under dashboard bottom area */
+.halibut-dashboard-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.halibut-dashboard-bottom-menu {
+    display: flex;
+    gap: 10px;
+}
+
+.halibut-dashboard-bottom-menu .gwt-Button {
+    min-width: 120px;
+    padding: 10px 14px;
+    background-color: #2a3442;
+    color: var(--text);
+    border: 1px solid #3d4b5f;
+    border-radius: 6px;
+}
+
+.halibut-dashboard-bottom-menu .gwt-Button:hover {
+    background-color: #344257;
+}
+
+/* Dashboard styled with the same color scheme as Login */
+.halibut-dashboard {
+    background-color: var(--panel-bg);
+    border: 2px solid var(--panel-border);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.halibut-dashboard-top,
+.halibut-dashboard-center,
+.halibut-dashboard-bottom,
+.halibut-dashboard-col-left,
+.halibut-dashboard-col-main {
+    border-color: var(--panel-border);
+}
+
+.halibut-dashboard-menu .gwt-Button,
+.halibut-dashboard-bottom-menu .gwt-Button {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--input-bg);
+    background-image: none;
+    color: var(--input-text);
+    border: 2px solid var(--input-border);
+}
+
+.halibut-dashboard-menu .gwt-Button:hover,
+.halibut-dashboard-bottom-menu .gwt-Button:hover {
+    background: #161d28;
+    background-image: none;
+    color: var(--input-text);
+    border-color: var(--input-border);
+}
+
+.halibut-dashboard-bottom-menu {
+    justify-content: flex-end;
+}
+
+/* Fit dashboard strictly inside viewport */
+.halibut-dashboard,
+.halibut-dashboard * {
+    box-sizing: border-box;
+}
+
+.halibut-dashboard {
+    width: calc(100vw - 24px);
+    height: calc(100vh - 24px);
+    margin: 12px;
+}
+
+/* Use ratios instead of percentage basis to avoid border overflow */
+.halibut-dashboard-top {
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.halibut-dashboard-center {
+    flex: 7 1 0;
+    min-height: 0;
+}
+
+.halibut-dashboard-bottom {
+    flex: 2 1 0;
+    min-height: 0;
+}
+
+/* Flush dashboard to top-left with no outer margin */
+.halibut-dashboard {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Hard fix: remove any visible top/left gaps around dashboard */
+html,
+body,
+.gwt-RootPanel {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.halibut-dashboard {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+}
