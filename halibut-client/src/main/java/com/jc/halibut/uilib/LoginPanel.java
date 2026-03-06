@@ -15,7 +15,10 @@ public class LoginPanel extends FlowPanel implements LoginPresenter.Display {
     private final TextBox userNameField = new TextBox();
     private final PasswordTextBox passwordField = new PasswordTextBox();
     private final Button loginButton = new Button("Login");
+
+    private final FlowPanel errorPanel = new FlowPanel();
     private final Label errorLabel = new Label();
+    private final Button closeErrorButton = new Button("Close");
 
     public LoginPanel(String title) {
         setStyleName("halibut-login-container");
@@ -29,7 +32,14 @@ public class LoginPanel extends FlowPanel implements LoginPresenter.Display {
         passwordField.getElement().setAttribute("placeholder", "Enter password");
 
         loginButton.addStyleName("button");
+
+        errorPanel.setStyleName("halibut-login-error-panel");
         errorLabel.setStyleName("halibut-login-error");
+        closeErrorButton.setStyleName("halibut-login-error-close");
+        closeErrorButton.addClickHandler(event -> setErrorMessage(""));
+        errorPanel.add(errorLabel);
+        errorPanel.add(closeErrorButton);
+        errorPanel.setVisible(false);
 
         if (!title.isEmpty()) {
             add(this.title);
@@ -39,7 +49,7 @@ public class LoginPanel extends FlowPanel implements LoginPresenter.Display {
         add(passLabel);
         add(passwordField);
         add(loginButton);
-        add(errorLabel);
+        add(errorPanel);
     }
 
     @Override
@@ -59,12 +69,26 @@ public class LoginPanel extends FlowPanel implements LoginPresenter.Display {
 
     @Override
     public void setLoginButtonEnabled(boolean enabled) {
-        loginButton.setEnabled(enabled);
+        if (!errorPanel.isVisible()) {
+            loginButton.setEnabled(enabled);
+        }
     }
 
     @Override
     public void setErrorMessage(String message) {
-        errorLabel.setText(message == null ? "" : message);
+        String safeMessage = message == null ? "" : message.trim();
+        boolean hasError = !safeMessage.isEmpty();
+
+        errorLabel.setText(safeMessage);
+        errorPanel.setVisible(hasError);
+        setMainControlsEnabled(!hasError);
+        closeErrorButton.setEnabled(true);
+    }
+
+    private void setMainControlsEnabled(boolean enabled) {
+        userNameField.setEnabled(enabled);
+        passwordField.setEnabled(enabled);
+        loginButton.setEnabled(enabled);
     }
 
     @Override

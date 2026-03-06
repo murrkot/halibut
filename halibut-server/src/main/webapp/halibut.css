@@ -448,3 +448,39 @@ body,
     background-color: #000000 !important;
     background-image: none !important;
 }
+
+/* Dismissible login error box */
+.halibut-login-error-panel {
+    margin-top: 10px;
+    padding: 10px;
+    border: 2px solid #b44747;
+    border-radius: 8px;
+    background-color: rgba(120, 18, 18, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.halibut-login-error {
+    margin: 0;
+    min-height: 0;
+    flex: 1;
+}
+
+.halibut-login-error-close {
+    margin-top: 0 !important;
+    padding: 4px 10px !important;
+    min-width: 64px;
+}
+
+/* Error panel color adjustment */
+.halibut-login-error-panel {
+    background-color: #d4d4d4;
+    border-color: #9a9a9a;
+}
+
+.halibut-login-error {
+    color: #4b0000;
+    text-shadow: none;
+}
