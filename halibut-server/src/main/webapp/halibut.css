@@ -1,34 +1,185 @@
-/** Add css rules here for your application. */
+:root {
+    --bg: #0b0f14;
+    --text: #f5f7fa;
+    --muted: #c9d1d9;
+    --danger: #ff3b30;
 
+    --panel-bg: #4a525e;
+    --panel-border: #d3dae3;
+    --input-bg: #0f141d;
+    --input-text: #f8fbff;
+    --input-border: #90a3b8;
 
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+    --login-btn-bg: #aaaaaa;
+    --login-btn-bg-hover: #b6b6b6;
+    --login-btn-text: #444444;
+    --login-btn-border: #7f7f7f;
+
+    --page-bg: #151b23;
+    --page-border: #2d3748;
+    --page-btn-bg: #35c2ff;
+    --page-btn-bg-hover: #62d1ff;
+    --page-btn-text: #05131d;
+    --page-btn-border: #52ccff;
+
+    --focus-ring: rgba(53, 194, 255, 0.35);
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    background: radial-gradient(circle at top, #121a24 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: Segoe UI, Tahoma, Arial, sans-serif;
 }
 
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+.gwt-RootPanel {
+    min-height: 100vh;
+    background: transparent;
 }
 
-.dialogVPanel {
-  margin: 5px;
+.halibut-login-container {
+    width: 340px;
+    padding: 26px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--panel-bg);
+    border: 2px solid var(--panel-border);
+    border-radius: 14px;
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
 }
 
-.serverResponseLabelError {
-  color: red;
+.halibut-login-container h2 {
+    color: #e2e8ef;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+.halibut-login-container label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.halibut-login-container input {
+    margin: 8px 0 16px;
+    padding: 10px 12px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+}
+
+.halibut-login-container input::placeholder {
+    color: #b8c7d8;
+}
+
+.halibut-login-container input:focus {
+    outline: 2px solid var(--focus-ring);
+    border-color: #35c2ff;
+}
+
+.halibut-login-container button,
+.halibut-page button {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.halibut-login-container button:focus,
+.halibut-page button:focus {
+    outline: 2px solid var(--focus-ring);
+}
+
+.halibut-login-container button {
+    background-color: var(--login-btn-bg);
+    color: var(--login-btn-text);
+    border: 1px solid var(--login-btn-border);
+}
+
+.halibut-login-container button:hover {
+    background-color: var(--login-btn-bg-hover);
+}
+
+.halibut-login-error {
+    color: var(--danger);
+    margin-top: 8px;
+    min-height: 18px;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255, 59, 48, 0.55);
+}
+
+.halibut-page {
+    width: min(560px, calc(100% - 32px));
+    margin: 56px auto;
+    padding: 24px;
+    border-radius: 14px;
+    background-color: var(--page-bg);
+    border: 1px solid var(--page-border);
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.halibut-page h2 {
+    color: var(--text);
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.halibut-page p {
+    color: var(--muted);
+}
+
+.halibut-page button {
+    background-color: var(--page-btn-bg);
+    color: var(--page-btn-text);
+    border: 1px solid var(--page-btn-border);
+}
+
+.halibut-page button:hover {
+    background-color: var(--page-btn-bg-hover);
+}
+
+/* Force login button colors over GWT default theme */
+.halibut-login-container .gwt-Button,
+.halibut-login-container .button {
+    background: #aaaaaa !important;
+    background-image: none !important;
+    color: #444444 !important;
+    border: 1px solid #7f7f7f !important;
+}
+
+.halibut-login-container .gwt-Button:hover,
+.halibut-login-container .button:hover {
+    background: #b6b6b6 !important;
+    background-image: none !important;
+}
+
+/* Match login button color scheme to input field */
+.halibut-login-container .gwt-Button,
+.halibut-login-container .button,
+.halibut-login-container button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background: var(--input-bg) !important;
+    background-image: none !important;
+    color: var(--input-text) !important;
+    border: 2px solid var(--input-border) !important;
+}
+
+.halibut-login-container .gwt-Button:hover,
+.halibut-login-container .button:hover,
+.halibut-login-container button:hover {
+    background: #161d28 !important;
+    background-image: none !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
 }
