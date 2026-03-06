@@ -3,11 +3,29 @@ package com.jc.halibut.uilib;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.jc.halibut.uilib.forms.AnalyticsFormPanel;
+import com.jc.halibut.uilib.forms.ClientsFormPanel;
+import com.jc.halibut.uilib.forms.HelpFormPanel;
+import com.jc.halibut.uilib.forms.HomeFormPanel;
+import com.jc.halibut.uilib.forms.InventoryFormPanel;
+import com.jc.halibut.uilib.forms.OrdersFormPanel;
+import com.jc.halibut.uilib.forms.SettingsFormPanel;
+import com.jc.halibut.uilib.forms.TopMenuFormPanel;
 
 public class DashboardPanel extends FlowPanel {
+    private final Button homeButton = new Button("Income");
+    private final Button ordersButton = new Button("Orders");
+    private final Button analyticsButton = new Button("Analytics");
+    private final Button inventoryButton = new Button("Inventory");
+    private final Button clientsButton = new Button("Clients");
+    private final Button settingsButton = new Button("Settings");
+    private final Button helpButton = new Button("Help");
+
     private final Button reportsButton = new Button("Reports");
     private final Button openProfileButton = new Button("Profile");
     private final Button logoutButton = new Button("Logout");
+
+    private final FlowPanel mainContent = new FlowPanel();
 
     public DashboardPanel() {
         setStyleName("halibut-dashboard");
@@ -17,13 +35,13 @@ public class DashboardPanel extends FlowPanel {
 
         FlowPanel topMenu = new FlowPanel();
         topMenu.setStyleName("halibut-dashboard-menu");
-        topMenu.add(new Button("Home"));
-        topMenu.add(new Button("Orders"));
-        topMenu.add(new Button("Analytics"));
-        topMenu.add(new Button("Inventory"));
-        topMenu.add(new Button("Clients"));
-        topMenu.add(new Button("Settings"));
-        topMenu.add(new Button("Help"));
+        topMenu.add(homeButton);
+        topMenu.add(ordersButton);
+        topMenu.add(analyticsButton);
+        topMenu.add(inventoryButton);
+        topMenu.add(clientsButton);
+        topMenu.add(settingsButton);
+        topMenu.add(helpButton);
         topArea.add(topMenu);
 
         FlowPanel centerArea = new FlowPanel();
@@ -33,16 +51,15 @@ public class DashboardPanel extends FlowPanel {
         leftColumn.setStyleName("halibut-dashboard-col halibut-dashboard-col-left");
         leftColumn.add(new HTML("<h3>Left</h3>"));
 
-        FlowPanel middleColumn = new FlowPanel();
-        middleColumn.setStyleName("halibut-dashboard-col halibut-dashboard-col-main");
-        middleColumn.add(new HTML("<h3>Main</h3>"));
+        mainContent.setStyleName("halibut-dashboard-col halibut-dashboard-col-main");
+        showMainPlaceholder();
 
         FlowPanel rightColumn = new FlowPanel();
         rightColumn.setStyleName("halibut-dashboard-col halibut-dashboard-col-right");
         rightColumn.add(new HTML("<h3>Right</h3>"));
 
         centerArea.add(leftColumn);
-        centerArea.add(middleColumn);
+        centerArea.add(mainContent);
         centerArea.add(rightColumn);
 
         FlowPanel bottomArea = new FlowPanel();
@@ -59,6 +76,77 @@ public class DashboardPanel extends FlowPanel {
         add(topArea);
         add(centerArea);
         add(bottomArea);
+
+        bindTopMenuHandlers();
+        setDashboardButtonsEnabled(true);
+    }
+
+    private void bindTopMenuHandlers() {
+        homeButton.addClickHandler(event -> openHomeForm());
+        ordersButton.addClickHandler(event -> openOrdersForm());
+        analyticsButton.addClickHandler(event -> openAnalyticsForm());
+        inventoryButton.addClickHandler(event -> openInventoryForm());
+        clientsButton.addClickHandler(event -> openClientsForm());
+        settingsButton.addClickHandler(event -> openSettingsForm());
+        helpButton.addClickHandler(event -> openHelpForm());
+    }
+
+    private void openHomeForm() {
+        showForm(new HomeFormPanel());
+    }
+
+    private void openOrdersForm() {
+        showForm(new OrdersFormPanel());
+    }
+
+    private void openAnalyticsForm() {
+        showForm(new AnalyticsFormPanel());
+    }
+
+    private void openInventoryForm() {
+        showForm(new InventoryFormPanel());
+    }
+
+    private void openClientsForm() {
+        showForm(new ClientsFormPanel());
+    }
+
+    private void openSettingsForm() {
+        showForm(new SettingsFormPanel());
+    }
+
+    private void openHelpForm() {
+        showForm(new HelpFormPanel());
+    }
+
+    private void showMainPlaceholder() {
+        mainContent.clear();
+        mainContent.add(new HTML("<h3>Main</h3>"));
+        setDashboardButtonsEnabled(true);
+    }
+
+    private void showForm(TopMenuFormPanel panel) {
+        setDashboardButtonsEnabled(false);
+
+        panel.getCancelButton().addClickHandler(event -> showMainPlaceholder());
+        panel.getOkButton().addClickHandler(event -> { panel.setStatusMessage(panel.getFormName() + " saved."); showMainPlaceholder(); });
+
+        mainContent.clear();
+        mainContent.add(panel);
+    }
+
+    private void setDashboardButtonsEnabled(boolean enabled) {
+        homeButton.setEnabled(enabled);
+        ordersButton.setEnabled(enabled);
+        analyticsButton.setEnabled(enabled);
+        inventoryButton.setEnabled(enabled);
+        clientsButton.setEnabled(enabled);
+        settingsButton.setEnabled(enabled);
+        helpButton.setEnabled(enabled);
+
+        reportsButton.setEnabled(enabled);
+        openProfileButton.setEnabled(enabled);
+        logoutButton.setEnabled(enabled);
     }
 
     public Button getReportsButton() {

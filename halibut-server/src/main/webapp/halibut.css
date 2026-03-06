@@ -379,3 +379,64 @@ body,
     height: auto !important;
     margin: 0 !important;
 }
+
+/* Login-style form panel rendered inside Dashboard main area */
+.halibut-form-panel {
+    width: min(420px, 100%);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--panel-bg);
+    border: 2px solid var(--panel-border);
+    border-radius: 14px;
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.halibut-form-panel h3 {
+    margin: 0 0 6px 0;
+    color: #e2e8ef;
+}
+
+.halibut-form-panel label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.halibut-form-panel input {
+    padding: 10px 12px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+}
+
+.halibut-form-panel input:focus {
+    outline: 2px solid var(--focus-ring);
+    border-color: #35c2ff;
+}
+
+.halibut-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.halibut-form-actions .gwt-Button {
+    min-width: 90px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+}
+
+.halibut-form-actions .gwt-Button:hover {
+    background: #161d28;
+}
+
+.halibut-form-status {
+    color: #9cd67a;
+    min-height: 16px;
+}
