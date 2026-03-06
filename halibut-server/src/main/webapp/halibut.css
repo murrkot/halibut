@@ -440,3 +440,11 @@ body,
     color: #9cd67a;
     min-height: 16px;
 }
+
+/* Final base-page fallback for Login view */
+html,
+body,
+.gwt-RootPanel {
+    background-color: #000000 !important;
+    background-image: none !important;
+}

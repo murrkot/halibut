@@ -58,6 +58,11 @@ public class LoginPanel extends FlowPanel implements LoginPresenter.Display {
     }
 
     @Override
+    public void setLoginButtonEnabled(boolean enabled) {
+        loginButton.setEnabled(enabled);
+    }
+
+    @Override
     public void setErrorMessage(String message) {
         errorLabel.setText(message == null ? "" : message);
     }

@@ -3,10 +3,15 @@
   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
   version="5.0">
 
-	<!-- Servlets -->
+  <!-- Servlets -->
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.jc.halibut.GreetingServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>loginServlet</servlet-name>
+    <servlet-class>com.jc.halibut.LoginServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -14,7 +19,12 @@
     <url-pattern>/happ/greet</url-pattern>
   </servlet-mapping>
 
-	<!-- Default page to serve -->
+  <servlet-mapping>
+    <servlet-name>loginServlet</servlet-name>
+    <url-pattern>/happ/login</url-pattern>
+  </servlet-mapping>
+
+  <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
