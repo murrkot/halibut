@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.jc.halibut.AuthSession;
 import com.jc.halibut.LoginResponse;
 import com.jc.halibut.LoginService;
 import com.jc.halibut.LoginServiceAsync;
@@ -25,6 +26,7 @@ public class LoginPresenter implements Presenter {
     private final HandlerManager eventBus;
     private final Display display;
     private final LoginServiceAsync loginService = GWT.create(LoginService.class);
+    private final AuthSession authSession = AuthSession.getInstance();
 
     public LoginPresenter(HandlerManager eventBus, Display display) {
         this.eventBus = eventBus;
@@ -64,11 +66,13 @@ public class LoginPresenter implements Presenter {
                 display.setLoginButtonEnabled(true);
 
                 if (result != null && result.isSuccess()) {
+                    authSession.apply(result);
                     display.setErrorMessage("");
                     eventBus.fireEvent(new LoginEvent());
                     return;
                 }
 
+                authSession.clear();
                 String message = result == null ? "Authentication failed." : valueOrEmpty(result.getMessage());
                 display.setErrorMessage(message.isEmpty() ? "Authentication failed." : message);
             }

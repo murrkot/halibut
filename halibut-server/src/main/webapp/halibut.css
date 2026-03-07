@@ -484,3 +484,109 @@ body,
     color: #4b0000;
     text-shadow: none;
 }
+
+.halibut-profile-status {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: #d7e6f5;
+    min-height: 16px;
+}
+
+/* Full-page profile layout */
+.halibut-profile-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--panel-bg);
+    color: var(--text);
+    border: 2px solid var(--panel-border);
+    box-sizing: border-box;
+}
+
+.halibut-profile-top {
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.halibut-profile-top h2 {
+    margin: 0 0 6px 0;
+}
+
+.halibut-profile-header {
+    color: var(--muted);
+}
+
+.halibut-profile-middle {
+    flex: 7 1 0;
+    min-height: 0;
+    padding: 12px 16px;
+    overflow: auto;
+}
+
+.halibut-profile-preferences {
+    margin-bottom: 12px;
+}
+
+.halibut-profile-tabs {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.halibut-profile-tab-content {
+    padding: 12px;
+    color: var(--text);
+}
+
+.halibut-profile-bottom {
+    flex: 2 1 0;
+    min-height: 0;
+    padding: 12px 16px;
+    border-top: 1px solid var(--panel-border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Expand profile tabs panel to full width */
+.halibut-profile-tabs,
+.halibut-profile-tabs .gwt-TabPanelBottom,
+.halibut-profile-tabs .gwt-TabBar {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Expand profile tabs panel to full available height */
+.halibut-profile-middle {
+    display: flex;
+    flex-direction: column;
+}
+
+.halibut-profile-tabs {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.halibut-profile-tabs .gwt-TabPanelBottom {
+    height: calc(100% - 36px);
+    overflow: auto;
+}
+
+/* Prevent unnecessary horizontal scrollbar in profile tabs */
+.halibut-profile-tabs .gwt-TabPanelBottom {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.halibut-profile-tab-content {
+    box-sizing: border-box;
+    width: 100%;
+}

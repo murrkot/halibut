@@ -1,9 +1,11 @@
 package com.jc.halibut;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.jc.halibut.event.LoginEvent;
 import com.jc.halibut.event.LoginEventHandler;
@@ -21,10 +23,13 @@ public class AppController implements Presenter, ValueChangeHandler<String>, Log
     private static final String TOKEN_PROFILE = "profile";
 
     private final HandlerManager eventBus;
+    private final LoginServiceAsync loginService = GWT.create(LoginService.class);
+    private final AuthSession authSession = AuthSession.getInstance();
     private HasWidgets container;
 
     public AppController(HandlerManager eventBus) {
         this.eventBus = eventBus;
+        authSession.loadFromStorageIfEnabled();
         bind();
     }
 
@@ -48,6 +53,11 @@ public class AppController implements Presenter, ValueChangeHandler<String>, Log
         this.container = container;
 
         if (History.getToken() == null || History.getToken().trim().isEmpty()) {
+            if (authSession.isAutoSessionRestoreEnabled() && authSession.hasSession()) {
+                ensureAuthenticatedThen(() -> History.newItem(TOKEN_DASHBOARD));
+                return;
+            }
+
             History.newItem(TOKEN_LOGIN);
             return;
         }
@@ -57,24 +67,59 @@ public class AppController implements Presenter, ValueChangeHandler<String>, Log
 
     private void showPage(String token) {
         String safeToken = token == null ? "" : token.toLowerCase();
-        Presenter presenter;
 
         switch (safeToken) {
             case TOKEN_DASHBOARD:
-                presenter = new DashboardPresenter(new DashboardPanel());
+                ensureAuthenticatedThen(() -> renderPresenter(new DashboardPresenter(new DashboardPanel())));
                 break;
             case TOKEN_PROFILE:
-                presenter = new ProfilePresenter(new ProfilePanel());
+                ensureAuthenticatedThen(() -> renderPresenter(new ProfilePresenter(new ProfilePanel())));
                 break;
             case TOKEN_LOGIN:
             default:
                 if (!TOKEN_LOGIN.equals(safeToken)) {
                     History.newItem(TOKEN_LOGIN, false);
                 }
-                presenter = new LoginPresenter(eventBus, new LoginPanel("Halibut Login"));
+                renderPresenter(new LoginPresenter(eventBus, new LoginPanel("Halibut Login")));
                 break;
         }
+    }
 
+    private void ensureAuthenticatedThen(Runnable onValidSession) {
+        if (!authSession.hasSession()) {
+            History.newItem(TOKEN_LOGIN, false);
+            renderPresenter(new LoginPresenter(eventBus, new LoginPanel("Halibut Login")));
+            return;
+        }
+
+        loginService.validateSession(
+                authSession.getUserId(),
+                authSession.getSessionId(),
+                authSession.getSecurityToken(),
+                new AsyncCallback<Boolean>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        authSession.clear();
+                        History.newItem(TOKEN_LOGIN, false);
+                        renderPresenter(new LoginPresenter(eventBus, new LoginPanel("Halibut Login")));
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        if (Boolean.TRUE.equals(result)) {
+                            onValidSession.run();
+                            return;
+                        }
+
+                        authSession.clear();
+                        History.newItem(TOKEN_LOGIN, false);
+                        renderPresenter(new LoginPresenter(eventBus, new LoginPanel("Halibut Login")));
+                    }
+                }
+        );
+    }
+
+    private void renderPresenter(Presenter presenter) {
         presenter.go(container);
     }
 }

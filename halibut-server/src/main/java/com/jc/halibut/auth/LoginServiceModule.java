@@ -7,5 +7,6 @@ public class LoginServiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(LoginAccountRepository.class).in(Singleton.class);
+        bind(ActiveSessionRepository.class).in(Singleton.class);
     }
 }

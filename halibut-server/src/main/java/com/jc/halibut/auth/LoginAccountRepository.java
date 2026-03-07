@@ -62,12 +62,36 @@ public class LoginAccountRepository {
         }
     }
 
+    public boolean updateAutoSessionRestorePreference(Long userId, boolean enabled) {
+        if (userId == null) {
+            return false;
+        }
+
+        Transaction tx = null;
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+            int updated = session.createMutationQuery(
+                            "update LoginAccount set autoSessionRestoreEnabled = :enabled where id = :userId")
+                    .setParameter("enabled", enabled)
+                    .setParameter("userId", userId)
+                    .executeUpdate();
+            tx.commit();
+            return updated > 0;
+        } catch (RuntimeException ex) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw ex;
+        }
+    }
+
     private LoginAccount createAccount(SeedAccount seed) {
         LoginAccount account = new LoginAccount();
         account.setUsername(seed.username());
         account.setDisplayName(seed.displayName());
         account.setPasswordHash(seed.passwordHash());
         account.setRole(seed.role());
+        account.setAutoSessionRestoreEnabled(seed.autoSessionRestoreEnabled());
         account.setActive(true);
         return account;
     }
@@ -86,6 +110,7 @@ public class LoginAccountRepository {
         }
     }
 
-    public record SeedAccount(String username, String passwordHash, String displayName, LoginRole role) {
+    public record SeedAccount(String username, String passwordHash, String displayName, LoginRole role,
+                              boolean autoSessionRestoreEnabled) {
     }
 }

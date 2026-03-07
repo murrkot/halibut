@@ -29,6 +29,9 @@ public class LoginAccount {
     @Column(nullable = false, length = 20)
     private LoginRole role = LoginRole.USER;
 
+    @Column(name = "auto_session_restore_enabled", nullable = false)
+    private boolean autoSessionRestoreEnabled = false;
+
     @Column(nullable = false)
     private boolean active = true;
 
@@ -66,6 +69,14 @@ public class LoginAccount {
 
     public void setRole(LoginRole role) {
         this.role = role;
+    }
+
+    public boolean isAutoSessionRestoreEnabled() {
+        return autoSessionRestoreEnabled;
+    }
+
+    public void setAutoSessionRestoreEnabled(boolean autoSessionRestoreEnabled) {
+        this.autoSessionRestoreEnabled = autoSessionRestoreEnabled;
     }
 
     public boolean isActive() {
