@@ -30,6 +30,7 @@ public class AppController implements Presenter, ValueChangeHandler<String>, Log
     public AppController(HandlerManager eventBus) {
         this.eventBus = eventBus;
         authSession.loadFromStorageIfEnabled();
+        CurrentLocation.getInstance().loadFromCookies();
         bind();
     }
 
@@ -123,3 +124,4 @@ public class AppController implements Presenter, ValueChangeHandler<String>, Log
         presenter.go(container);
     }
 }
+

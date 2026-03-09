@@ -590,3 +590,188 @@ body,
     box-sizing: border-box;
     width: 100%;
 }
+
+/* Profile tabs: dark content area, gray tabs with white text */
+.halibut-profile-tabs,
+.halibut-profile-tabs .gwt-TabPanelBottom,
+.halibut-profile-tabs .gwt-TabPanelBottomInner,
+.halibut-profile-tabs .gwt-TabPanelBottom > div {
+    background-color: #000000 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-profile-tabs .gwt-TabBar {
+    background-color: #1f2937 !important;
+}
+
+.halibut-profile-tabs .gwt-TabBar .gwt-TabBarItem {
+    background-color: #4b5563 !important;
+    color: #f4f7fb !important;
+    border: 1px solid #6b7280 !important;
+}
+
+.halibut-profile-tabs .gwt-TabBar .gwt-TabBarItem-selected {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    border-color: #9ca3af !important;
+}
+
+
+/* Profile layout tuning: compact bottom action menu + LoginPanel color scheme */
+.halibut-profile-top {
+    flex: 0 0 auto;
+}
+
+.halibut-profile-middle {
+    flex: 1 1 auto;
+}
+
+.halibut-profile-bottom {
+    flex: 0 0 68px;
+    min-height: 68px;
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: var(--panel-bg);
+    border-top: 2px solid var(--panel-border);
+}
+
+.halibut-profile-bottom .gwt-Button,
+.halibut-profile-bottom .button,
+.halibut-profile-bottom button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    min-width: 110px;
+    padding: 8px 12px;
+    background: var(--input-bg) !important;
+    background-image: none !important;
+    color: var(--input-text) !important;
+    border: 2px solid var(--input-border) !important;
+    border-radius: 8px;
+}
+
+.halibut-profile-bottom .gwt-Button:hover,
+.halibut-profile-bottom .button:hover,
+.halibut-profile-bottom button:hover {
+    background: #161d28 !important;
+    background-image: none !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+.halibut-profile-top {
+    border-bottom: none !important;
+}
+
+/* Users and Locations tabs borderless mode */
+.halibut-profile-tabs .halibut-users-tab,
+.halibut-profile-tabs .halibut-users-tab .halibut-grid,
+.halibut-profile-tabs .halibut-users-tab .dataGridWidget,
+.halibut-profile-tabs .halibut-users-tab .dataGridWidget table,
+.halibut-profile-tabs .halibut-users-tab .dataGridWidget td,
+.halibut-profile-tabs .halibut-users-tab .dataGridWidget th,
+.halibut-profile-tabs .halibut-locations-tab,
+.halibut-profile-tabs .halibut-locations-tab .halibut-grid,
+.halibut-profile-tabs .halibut-locations-tab .dataGridWidget,
+.halibut-profile-tabs .halibut-locations-tab .dataGridWidget table,
+.halibut-profile-tabs .halibut-locations-tab .dataGridWidget td,
+.halibut-profile-tabs .halibut-locations-tab .dataGridWidget th {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove parent tab-container borders (Users tab was already borderless) */
+.halibut-profile-tabs,
+.halibut-profile-tabs .gwt-TabPanelBottom,
+.halibut-profile-tabs .gwt-TabPanelBottomInner,
+.halibut-profile-tabs .gwt-TabPanelBottom > div {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.halibut-users-tab .halibut-grid-container,
+.halibut-locations-tab .halibut-grid-container {
+    margin: 0 !important;
+}
+
+.halibut-users-tab,
+.halibut-locations-tab {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Users/Locations tab adaptive layout */
+.halibut-users-tab,
+.halibut-locations-tab {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.halibut-users-tab .menuBar,
+.halibut-locations-tab .menuBar {
+    flex: 0 0 auto;
+}
+
+.halibut-users-grid,
+.halibut-locations-grid {
+    flex: 0 0 auto;
+    min-height: 0;
+    height: calc(100% - 22px) !important;
+    overflow: hidden !important;
+    padding-right: 3px;
+    padding-bottom: 3px;
+}
+
+.halibut-users-grid > div,
+.halibut-locations-grid > div {
+    height: 95%;
+}
+
+.halibut-users-tab .halibut-profile-status,
+.halibut-locations-tab .halibut-profile-status {
+    flex: 0 0 auto;
+    margin: 0 !important;
+    padding-top: 6px;
+}
+
+.halibut-grid-info {
+    flex: 0 0 auto;
+    margin-top: 6px;
+    min-height: 16px;
+    color: #d7e6f5;
+}
+
+/* Users/Locations tabs: scroll only inside DataGrid data area */
+.halibut-profile-middle,
+.halibut-profile-tabs,
+.halibut-profile-tabs .gwt-TabPanelBottom,
+.halibut-users-tab,
+.halibut-locations-tab {
+    overflow: hidden !important;
+}
+
+.halibut-users-grid .dataGridWidget,
+.halibut-locations-grid .dataGridWidget {
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
+
+
+
+
+.halibut-users-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel,
+.halibut-locations-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel {
+    height: calc(100% - 1px) !important;
+}
+
+.halibut-profile-tabs .gwt-TabPanelBottom {
+  /* custom styles */
+  height: calc(100% - 22px) !important;
+}

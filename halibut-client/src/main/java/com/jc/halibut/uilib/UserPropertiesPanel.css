@@ -1,0 +1,81 @@
+@external Caption;
+
+.dialog {
+    background-color: #4a525e;
+    border: 2px solid #d3dae3;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    color: #f5f7fa;
+}
+
+.dialog .Caption {
+    background-color: #0f141d;
+    color: #f8fbff;
+    border-bottom: 2px solid #90a3b8;
+    font-weight: 700;
+    padding: 8px 12px;
+}
+
+.root {
+    width: 360px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: #4a525e;
+    color: #f5f7fa;
+    box-sizing: border-box;
+}
+
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    background-color: #0f141d !important;
+    background-image: none !important;
+    color: #f8fbff !important;
+    border: 2px solid #90a3b8 !important;
+    border-radius: 8px;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.input:focus {
+    outline: 2px solid rgba(53, 194, 255, 0.35);
+    border-color: #35c2ff !important;
+}
+
+.message {
+    min-height: 18px;
+    color: #ff9f9f;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.actionButton {
+    min-width: 90px;
+    padding: 8px 12px;
+    background-color: #0f141d !important;
+    background-image: none !important;
+    color: #f8fbff !important;
+    border: 2px solid #90a3b8 !important;
+    border-radius: 8px;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.actionButton:hover {
+    background-color: #161d28 !important;
+    background-image: none !important;
+    color: #f8fbff !important;
+    border-color: #90a3b8 !important;
+}
+
+.actionButton:focus {
+    outline: 2px solid rgba(53, 194, 255, 0.35);
+}

@@ -1,0 +1,359 @@
+@external *;
+
+.dataGridWidget {
+    border: 2px solid #d3dae3;
+    border-radius: 12px;
+    background-color: #4a525e;
+    color: #f5f7fa;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.dataGridWidget table,
+.dataGridWidget tbody,
+.dataGridWidget tr,
+.dataGridWidget td {
+    border: none;
+}
+
+.dataGridHeader {
+    background-color: #4a525e;
+    color: #f5f7fa;
+    font-weight: 700;
+    border-bottom: 2px solid #d3dae3;
+}
+
+.dataGridFooter {
+    background-color: #4a525e;
+    color: #f5f7fa;
+    border-top: 2px solid #d3dae3;
+}
+
+.dataGridEvenRow,
+.dataGridOddRow {
+    background-color: #0f141d;
+    color: #f8fbff;
+}
+
+.dataGridCell,
+.dataGridEvenRowCell,
+.dataGridOddRowCell {
+    background-color: #0f141d;
+    color: #f8fbff;
+    border-bottom: 1px solid #90a3b8;
+}
+
+.dataGridHoveredRow,
+.dataGridHoveredRowCell {
+    background-color: #161d28;
+    color: #f8fbff;
+}
+
+.dataGridSelectedRow,
+.dataGridSelectedRowCell,
+.dataGridKeyboardSelectedRow,
+.dataGridKeyboardSelectedRowCell,
+.dataGridKeyboardSelectedCell {
+    background-color: #d3dae3;
+    color: #05131d;
+}
+
+.dataGridSelectedRow,
+.dataGridKeyboardSelectedRow {
+    box-shadow: inset 0 0 0 2px rgba(53, 194, 255, 0.35);
+}
+
+.halibutGridRowAdmin,
+.halibutGridRowAdmin .dataGridCell,
+.halibutGridRowAdmin .dataGridEvenRowCell,
+.halibutGridRowAdmin .dataGridOddRowCell {
+    background-color: #5a2323;
+    color: #f8fbff;
+}
+
+.halibutGridRowManager,
+.halibutGridRowManager .dataGridCell,
+.halibutGridRowManager .dataGridEvenRowCell,
+.halibutGridRowManager .dataGridOddRowCell {
+    background-color: #59461d;
+    color: #f8fbff;
+}
+
+.halibutGridRowUser,
+.halibutGridRowUser .dataGridCell,
+.halibutGridRowUser .dataGridEvenRowCell,
+.halibutGridRowUser .dataGridOddRowCell {
+    background-color: #1f3658;
+    color: #f8fbff;
+}
+
+.dataGridSelectedRow.halibutGridRowAdmin,
+.dataGridSelectedRow.halibutGridRowManager,
+.dataGridSelectedRow.halibutGridRowUser,
+.dataGridKeyboardSelectedRow.halibutGridRowAdmin,
+.dataGridKeyboardSelectedRow.halibutGridRowManager,
+.dataGridKeyboardSelectedRow.halibutGridRowUser,
+.dataGridSelectedRow.halibutGridRowAdmin .dataGridCell,
+.dataGridSelectedRow.halibutGridRowManager .dataGridCell,
+.dataGridSelectedRow.halibutGridRowUser .dataGridCell,
+.dataGridKeyboardSelectedRow.halibutGridRowAdmin .dataGridCell,
+.dataGridKeyboardSelectedRow.halibutGridRowManager .dataGridCell,
+.dataGridKeyboardSelectedRow.halibutGridRowUser .dataGridCell {
+    background-color: #d3dae3;
+    color: #05131d;
+}
+
+
+/* Moved from halibut.css: ReusableGridWidget styles */
+/* Reusable grid widget */
+.halibut-grid-container {
+    margin-top: 12px;
+    display: block;
+    width: 100%;
+    border: 1px solid #90a3b8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #101826;
+}
+
+.halibut-grid-focus {
+    width: 100%;
+    outline: none;
+}
+
+.halibut-grid-focus:focus {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.halibut-grid {
+    width: 100%;
+}
+
+.halibut-grid .dataGridHeader {
+    background-color: #1b2533;
+    color: #e5edf6;
+    font-weight: 700;
+    border-bottom: 1px solid #2a3a52;
+}
+
+.halibut-grid .dataGridEvenRow,
+.halibut-grid .dataGridOddRow {
+    background-color: #101826;
+}
+
+.halibut-grid .dataGridCell {
+    color: #f4f7fb !important;
+    border-bottom: 1px solid #2a3a52 !important;
+}
+
+.halibut-grid .dataGridHoveredRow {
+    background-color: #162236;
+    cursor: pointer;
+}
+
+.halibut-grid .dataGridSelectedRow,
+.halibut-grid .dataGridKeyboardSelectedRow {
+    background-color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridSelectedRow .dataGridCell,
+.halibut-grid .dataGridKeyboardSelectedRow .dataGridCell {
+    color: #0f1728 !important;
+}
+
+.halibut-grid-row-admin td {
+    background-color: #4a1f2a !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid-row-manager td {
+    background-color: #4a3a18 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid-row-user td {
+    background-color: #1a3458 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-admin td,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-manager td,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-user td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-admin td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-manager td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-user td {
+    background-color: #f4f7fb !important;
+    color: #0f1728 !important;
+}
+
+/* Grid hard overrides (highest priority) */
+.halibut-grid,
+.halibut-grid table,
+.halibut-grid tbody,
+.halibut-grid tr,
+.halibut-grid td {
+    background-color: #101826;
+}
+
+.halibut-grid .dataGridEvenRow,
+.halibut-grid .dataGridOddRow,
+.halibut-grid .dataGridEvenRow td,
+.halibut-grid .dataGridOddRow td,
+.halibut-grid .dataGridCell {
+    background-color: #101826 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridHoveredRow,
+.halibut-grid .dataGridHoveredRow td {
+    background-color: #162236 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridSelectedRow,
+.halibut-grid .dataGridSelectedRow td,
+.halibut-grid .dataGridKeyboardSelectedRow,
+.halibut-grid .dataGridKeyboardSelectedRow td {
+    background-color: #f4f7fb !important;
+    color: #0f1728 !important;
+}
+
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-admin td,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-manager td,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-user td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-admin td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-manager td,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-user td {
+    background-color: #f4f7fb !important;
+    color: #0f1728 !important;
+}
+
+.halibut-grid .halibut-grid-row-admin td {
+    background-color: #4a1f2a !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .halibut-grid-row-manager td {
+    background-color: #4a3a18 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .halibut-grid-row-user td {
+    background-color: #1a3458 !important;
+    color: #f4f7fb !important;
+}
+
+/* Grid row-driven background model */
+.halibut-grid .dataGridEvenRow,
+.halibut-grid .dataGridOddRow {
+    background-color: #000000 !important;
+}
+
+.halibut-grid .dataGridCell,
+.halibut-grid .dataGridEvenRow td,
+.halibut-grid .dataGridOddRow td,
+.halibut-grid .dataGridHoveredRow td,
+.halibut-grid .dataGridSelectedRow td,
+.halibut-grid .dataGridKeyboardSelectedRow td {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.halibut-grid .dataGridEvenRow,
+.halibut-grid .dataGridOddRow,
+.halibut-grid .dataGridHoveredRow {
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridHoveredRow {
+    background-color: #151515 !important;
+}
+
+.halibut-grid .dataGridSelectedRow,
+.halibut-grid .dataGridKeyboardSelectedRow {
+    background-color: #f4f7fb !important;
+    color: #0f1728 !important;
+}
+
+.halibut-grid .halibut-grid-row-admin {
+    background-color: #4a1f2a !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .halibut-grid-row-manager {
+    background-color: #4a3a18 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .halibut-grid-row-user {
+    background-color: #1a3458 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-admin,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-manager,
+.halibut-grid .dataGridSelectedRow.halibut-grid-row-user,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-admin,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-manager,
+.halibut-grid .dataGridKeyboardSelectedRow.halibut-grid-row-user {
+    background-color: #f4f7fb !important;
+    color: #0f1728 !important;
+}
+
+/* Users tab container background fix (override GWT clean theme white) */
+.halibut-profile-tabs .gwt-TabPanelBottom,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-profile-tab-content,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid-container,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid table,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid tbody {
+    background-color: #000000 !important;
+}
+
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridEvenRow,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridOddRow,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridHoveredRow,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridSelectedRow,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridKeyboardSelectedRow {
+    background-color: inherit !important;
+}
+
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid td,
+.halibut-profile-tabs .gwt-TabPanelBottom .halibut-users-tab .halibut-grid .dataGridCell {
+    background-color: transparent !important;
+}
+
+/* DataGrid solid row model */
+.halibut-grid .dataGridEvenRow,
+.halibut-grid .dataGridOddRow {
+    background-color: #0f1728 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridEvenRow td,
+.halibut-grid .dataGridOddRow td,
+.halibut-grid .dataGridCell {
+    background-color: #0f1728 !important;
+    color: #f4f7fb !important;
+    border-bottom: 1px solid #24314a !important;
+}
+
+.halibut-grid .dataGridHoveredRow,
+.halibut-grid .dataGridHoveredRow td {
+    background-color: #152038 !important;
+    color: #f4f7fb !important;
+}
+
+.halibut-grid .dataGridSelectedRow,
+.halibut-grid .dataGridKeyboardSelectedRow,
+.halibut-grid .dataGridSelectedRow td,
+.halibut-grid .dataGridKeyboardSelectedRow td,
+.halibut-grid .dataGridSelectedRow .dataGridCell,
+.halibut-grid .dataGridKeyboardSelectedRow .dataGridCell {
+    background-color: #e6edf7 !important;
+    color: #0f1728 !important;
+}
+
+
+
+

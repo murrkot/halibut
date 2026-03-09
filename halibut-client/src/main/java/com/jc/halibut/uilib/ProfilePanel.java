@@ -1,11 +1,15 @@
 package com.jc.halibut.uilib;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.jc.halibut.CurrentLocation;
 
 public class ProfilePanel extends FlowPanel {
     private final Label profileHeader = new Label();
@@ -14,6 +18,8 @@ public class ProfilePanel extends FlowPanel {
     private final Label statusLabel = new Label();
 
     private final TabPanel tabs = new TabPanel();
+    private UsersGridPanel usersGridPanel;
+    private LocationsGridPanel locationsGridPanel;
 
     private final Button dashboardButton = new Button("Dashboard");
     private final Button logoutButton = new Button("Logout");
@@ -31,6 +37,23 @@ public class ProfilePanel extends FlowPanel {
         middleArea.setStyleName("halibut-profile-middle");
 
         tabs.setStyleName("halibut-profile-tabs");
+        tabs.addSelectionHandler(new SelectionHandler<>() {
+            @Override
+            public void onSelection(SelectionEvent<Integer> event) {
+                int index = event.getSelectedItem();
+                if (index < 0 || index >= tabs.getWidgetCount()) {
+                    return;
+                }
+
+                Widget selectedWidget = tabs.getWidget(index);
+                if (selectedWidget == usersGridPanel && usersGridPanel != null) {
+                    usersGridPanel.refreshDisplay();
+                }
+                if (selectedWidget == locationsGridPanel && locationsGridPanel != null) {
+                    locationsGridPanel.refreshDisplay();
+                }
+            }
+        });
         middleArea.add(tabs);
 
         FlowPanel bottomArea = new FlowPanel();
@@ -50,21 +73,26 @@ public class ProfilePanel extends FlowPanel {
 
     public void configureTabsForRole(String role) {
         tabs.clear();
-
-        tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
-        tabs.add(buildSecurityTab(), "Security");
+        usersGridPanel = null;
+        locationsGridPanel = null;
 
         String normalizedRole = role == null ? "USER" : role.trim().toUpperCase();
         switch (normalizedRole) {
             case "ADMIN":
-                tabs.add(new HTML("<div class='halibut-profile-tab-content'>Administrative permissions and global settings.</div>"), "Admin");
-                tabs.add(new HTML("<div class='halibut-profile-tab-content'>Users and role management tools.</div>"), "Users");
+                tabs.add(buildUsersTab(), "Users");
+                tabs.add(buildLocationsTab(), "Locations");
+                tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
+                tabs.add(buildSecurityTab(), "Security");
                 break;
             case "MANAGER":
+                tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
+                tabs.add(buildSecurityTab(), "Security");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Team-level controls and management reports.</div>"), "Team");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Manager operations and approvals.</div>"), "Operations");
                 break;
             default:
+                tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
+                tabs.add(buildSecurityTab(), "Security");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Personal settings and preferences.</div>"), "Personal");
                 break;
         }
@@ -81,10 +109,28 @@ public class ProfilePanel extends FlowPanel {
         return securityTab;
     }
 
+    private UsersGridPanel buildUsersTab() {
+        usersGridPanel = new UsersGridPanel();
+        return usersGridPanel;
+    }
+
+    private LocationsGridPanel buildLocationsTab() {
+        locationsGridPanel = new LocationsGridPanel();
+        return locationsGridPanel;
+    }
+
     public void setUserInfo(String displayName, String role) {
         String safeName = displayName == null || displayName.trim().isEmpty() ? "Unknown user" : displayName;
         String safeRole = role == null || role.trim().isEmpty() ? "USER" : role;
-        profileHeader.setText("User: " + safeName + " | Role: " + safeRole);
+
+        String currentLocationName = CurrentLocation.getInstance().getCurrentName();
+        if (currentLocationName == null || currentLocationName.trim().isEmpty()) {
+            profileHeader.setText("User: " + safeName + " | Role: " + safeRole);
+            return;
+        }
+
+        profileHeader.setText("User: " + safeName + " | Role: " + safeRole
+                + " { Location : " + currentLocationName + " }");
     }
 
     public Button getDashboardButton() {
@@ -107,3 +153,4 @@ public class ProfilePanel extends FlowPanel {
         statusLabel.setText(message == null ? "" : message);
     }
 }
+

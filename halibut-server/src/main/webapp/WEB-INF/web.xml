@@ -4,24 +4,23 @@
   version="5.0">
 
   <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.jc.halibut.GreetingServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet>
+<servlet>
     <servlet-name>loginServlet</servlet-name>
     <servlet-class>com.jc.halibut.LoginServiceImpl</servlet-class>
   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/happ/greet</url-pattern>
+  <servlet>
+    <servlet-name>locationServlet</servlet-name>
+    <servlet-class>com.jc.halibut.location.LocationServiceImpl</servlet-class>
+  </servlet>
+<servlet-mapping>
+    <servlet-name>loginServlet</servlet-name>
+    <url-pattern>/happ/login</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>loginServlet</servlet-name>
-    <url-pattern>/happ/login</url-pattern>
+    <servlet-name>locationServlet</servlet-name>
+    <url-pattern>/happ/location</url-pattern>
   </servlet-mapping>
 
   <!-- Default page to serve -->
@@ -30,3 +29,5 @@
   </welcome-file-list>
 
 </web-app>
+
+

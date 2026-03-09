@@ -1,0 +1,23 @@
+.menuBar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.menuButton {
+    min-width: 90px;
+    background-color: #4d4d4d;
+    color: #ffffff;
+    border: 1px solid #5c5c5c;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+.menuButton:hover {
+    background-color: #595959;
+    color: #ffffff;
+}
+
+.menuButton:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.35);
+}

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.jc.halibut.AuthSession;
+import com.jc.halibut.CurrentLocation;
 import com.jc.halibut.LoginService;
 import com.jc.halibut.LoginServiceAsync;
 import com.jc.halibut.uilib.ProfilePanel;
@@ -13,6 +14,9 @@ public class ProfilePresenter implements Presenter {
     private final ProfilePanel view;
     private final LoginServiceAsync loginService = GWT.create(LoginService.class);
     private final AuthSession authSession = AuthSession.getInstance();
+    private final CurrentLocation currentLocation = CurrentLocation.getInstance();
+
+    private CurrentLocation.Listener locationListener;
 
     public ProfilePresenter(ProfilePanel view) {
         this.view = view;
@@ -24,8 +28,14 @@ public class ProfilePresenter implements Presenter {
         view.configureTabsForRole(authSession.getRole());
         view.getAutoRestoreCheckBox().setValue(authSession.isAutoSessionRestoreEnabled());
 
+        locationListener = location -> view.setUserInfo(authSession.getDisplayName(), authSession.getRole());
+        currentLocation.addListener(locationListener);
+
         view.getSavePreferenceButton().addClickHandler(event -> savePreference());
-        view.getDashboardButton().addClickHandler(event -> History.newItem("dashboard"));
+        view.getDashboardButton().addClickHandler(event -> {
+            currentLocation.removeListener(locationListener);
+            History.newItem("dashboard");
+        });
         view.getLogoutButton().addClickHandler(event -> logoutCurrentSession());
     }
 
@@ -44,7 +54,7 @@ public class ProfilePresenter implements Presenter {
                 authSession.getSessionId(),
                 authSession.getSecurityToken(),
                 enabled,
-                new AsyncCallback<Boolean>() {
+                new AsyncCallback<>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         view.getSavePreferenceButton().setEnabled(true);
@@ -67,6 +77,7 @@ public class ProfilePresenter implements Presenter {
 
     private void logoutCurrentSession() {
         if (!authSession.hasSession()) {
+            currentLocation.removeListener(locationListener);
             History.newItem("login");
             return;
         }
@@ -78,12 +89,14 @@ public class ProfilePresenter implements Presenter {
                 new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable caught) {
+                        currentLocation.removeListener(locationListener);
                         authSession.clear();
                         History.newItem("login");
                     }
 
                     @Override
                     public void onSuccess(Boolean result) {
+                        currentLocation.removeListener(locationListener);
                         authSession.clear();
                         History.newItem("login");
                     }

@@ -8,5 +8,6 @@ public class LoginServiceModule extends AbstractModule {
     protected void configure() {
         bind(LoginAccountRepository.class).in(Singleton.class);
         bind(ActiveSessionRepository.class).in(Singleton.class);
+        bind(LoginAccountMapper.class).in(Singleton.class);
     }
 }
