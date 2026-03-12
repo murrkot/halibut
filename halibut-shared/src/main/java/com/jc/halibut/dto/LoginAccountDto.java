@@ -10,6 +10,7 @@ public class LoginAccountDto implements Serializable {
     private LoginAccountRole role;
     private boolean autoSessionRestoreEnabled;
     private boolean active;
+    private String plainPassword;
 
     public LoginAccountDto() {
     }
@@ -70,5 +71,13 @@ public class LoginAccountDto implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
     }
 }

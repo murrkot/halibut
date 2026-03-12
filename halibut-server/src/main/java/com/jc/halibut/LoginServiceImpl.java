@@ -126,6 +126,15 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         return accountRepository.deleteLoginAccount(accountId);
     }
 
+    @Override
+    public boolean changePassword(Long userId, String sessionId, String securityToken, Long accountId,
+                                  String newPassword) throws IllegalArgumentException {
+        if (!isAuthorizedForUserManagement(userId, sessionId, securityToken)) {
+            return false;
+        }
+        return accountRepository.changePassword(accountId, newPassword);
+    }
+
     private boolean isAuthorizedForUserManagement(Long userId, String sessionId, String securityToken) {
         boolean validSession = activeSessionRepository.isSessionActive(userId, sessionId, securityToken);
         if (!validSession) {

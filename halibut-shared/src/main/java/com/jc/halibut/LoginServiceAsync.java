@@ -22,4 +22,7 @@ public interface LoginServiceAsync {
 
     void deleteLoginAccount(Long userId, String sessionId, String securityToken, Long accountId,
                             AsyncCallback<Boolean> callback);
+
+    void changePassword(Long userId, String sessionId, String securityToken, Long accountId, String newPassword,
+                        AsyncCallback<Boolean> callback);
 }

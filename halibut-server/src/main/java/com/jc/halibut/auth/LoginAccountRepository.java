@@ -74,7 +74,11 @@ public class LoginAccountRepository {
             LoginAccount entity;
             if (account.getId() == null) {
                 entity = new LoginAccount();
-                entity.setPasswordHash(DEFAULT_PASSWORD_HASH);
+                if (!isBlank(account.getPlainPassword())) {
+                    entity.setPasswordHash(sha256(account.getPlainPassword().trim()));
+                } else {
+                    entity.setPasswordHash(DEFAULT_PASSWORD_HASH);
+                }
                 applyDto(entity, account);
                 session.persist(entity);
             } else {
@@ -82,6 +86,9 @@ public class LoginAccountRepository {
                 if (entity == null) {
                     tx.rollback();
                     return false;
+                }
+                if (!isBlank(account.getPlainPassword())) {
+                    entity.setPasswordHash(sha256(account.getPlainPassword().trim()));
                 }
                 applyDto(entity, account);
                 session.merge(entity);
@@ -142,6 +149,31 @@ public class LoginAccountRepository {
                 tx.rollback();
             }
             throw ex;
+        }
+    }
+
+    public boolean changePassword(Long accountId, String newPlainPassword) {
+        if (accountId == null || isBlank(newPlainPassword)) {
+            return false;
+        }
+
+        String newHash = sha256(newPlainPassword.trim());
+
+        Transaction tx = null;
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+            int updated = session.createMutationQuery(
+                            "update LoginAccount set passwordHash = :hash where id = :accountId")
+                    .setParameter("hash", newHash)
+                    .setParameter("accountId", accountId)
+                    .executeUpdate();
+            tx.commit();
+            return updated > 0;
+        } catch (RuntimeException ex) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            return false;
         }
     }
 

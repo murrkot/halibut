@@ -24,4 +24,7 @@ public interface LoginService extends RemoteService {
 
     boolean deleteLoginAccount(Long userId, String sessionId, String securityToken, Long accountId)
             throws IllegalArgumentException;
+
+    boolean changePassword(Long userId, String sessionId, String securityToken, Long accountId, String newPassword)
+            throws IllegalArgumentException;
 }
