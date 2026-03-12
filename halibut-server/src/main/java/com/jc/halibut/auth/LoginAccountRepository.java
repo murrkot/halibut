@@ -152,6 +152,33 @@ public class LoginAccountRepository {
         }
     }
 
+    public boolean changeOwnPassword(Long accountId, String currentPlainPassword, String newPlainPassword) {
+        if (accountId == null || isBlank(currentPlainPassword) || isBlank(newPlainPassword)) {
+            return false;
+        }
+
+        String currentHash = sha256(currentPlainPassword.trim());
+        String newHash = sha256(newPlainPassword.trim());
+
+        Transaction tx = null;
+        try (Session session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+            int updated = session.createMutationQuery(
+                            "update LoginAccount set passwordHash = :newHash where id = :accountId and passwordHash = :currentHash")
+                    .setParameter("newHash", newHash)
+                    .setParameter("accountId", accountId)
+                    .setParameter("currentHash", currentHash)
+                    .executeUpdate();
+            tx.commit();
+            return updated > 0;
+        } catch (RuntimeException ex) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            return false;
+        }
+    }
+
     public boolean changePassword(Long accountId, String newPlainPassword) {
         if (accountId == null || isBlank(newPlainPassword)) {
             return false;

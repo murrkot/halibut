@@ -27,4 +27,7 @@ public interface LoginService extends RemoteService {
 
     boolean changePassword(Long userId, String sessionId, String securityToken, Long accountId, String newPassword)
             throws IllegalArgumentException;
+
+    boolean changeOwnPassword(Long userId, String sessionId, String securityToken, String currentPassword,
+                              String newPassword) throws IllegalArgumentException;
 }

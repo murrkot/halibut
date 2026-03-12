@@ -133,6 +133,53 @@ class LoginServiceImplTest {
         }
     }
 
+    // ===================== changeOwnPassword =====================
+
+    @Nested
+    class ChangeOwnPassword {
+
+        @Test
+        void returnsTrue_whenSessionIsActiveAndCurrentPasswordMatches() {
+            when(activeSessionRepository.isSessionActive(USER_ID, SESSION_ID, SECURITY_TOKEN)).thenReturn(true);
+            when(accountRepository.changeOwnPassword(USER_ID, "oldPass", "newPass")).thenReturn(true);
+
+            boolean result = service.changeOwnPassword(USER_ID, SESSION_ID, SECURITY_TOKEN, "oldPass", "newPass");
+
+            assertTrue(result);
+            verify(accountRepository).changeOwnPassword(USER_ID, "oldPass", "newPass");
+        }
+
+        @Test
+        void returnsFalse_whenSessionIsInactive() {
+            mockInactiveSession();
+
+            boolean result = service.changeOwnPassword(USER_ID, SESSION_ID, SECURITY_TOKEN, "oldPass", "newPass");
+
+            assertFalse(result);
+            verify(accountRepository, never()).changeOwnPassword(anyLong(), anyString(), anyString());
+        }
+
+        @Test
+        void returnsFalse_whenCurrentPasswordIsWrong() {
+            when(activeSessionRepository.isSessionActive(USER_ID, SESSION_ID, SECURITY_TOKEN)).thenReturn(true);
+            when(accountRepository.changeOwnPassword(USER_ID, "wrongPass", "newPass")).thenReturn(false);
+
+            boolean result = service.changeOwnPassword(USER_ID, SESSION_ID, SECURITY_TOKEN, "wrongPass", "newPass");
+
+            assertFalse(result);
+        }
+
+        @Test
+        void worksForUserRole() {
+            when(activeSessionRepository.isSessionActive(USER_ID, SESSION_ID, SECURITY_TOKEN)).thenReturn(true);
+            when(accountRepository.changeOwnPassword(USER_ID, "oldPass", "newPass")).thenReturn(true);
+
+            boolean result = service.changeOwnPassword(USER_ID, SESSION_ID, SECURITY_TOKEN, "oldPass", "newPass");
+
+            assertTrue(result);
+        }
+    }
+
     // ===================== saveLoginAccount with password =====================
 
     @Nested

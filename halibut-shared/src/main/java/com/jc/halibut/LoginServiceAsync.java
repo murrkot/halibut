@@ -25,4 +25,7 @@ public interface LoginServiceAsync {
 
     void changePassword(Long userId, String sessionId, String securityToken, Long accountId, String newPassword,
                         AsyncCallback<Boolean> callback);
+
+    void changeOwnPassword(Long userId, String sessionId, String securityToken, String currentPassword,
+                           String newPassword, AsyncCallback<Boolean> callback);
 }
