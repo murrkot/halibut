@@ -14,6 +14,8 @@ public interface UserPropertiesPanelResources extends ClientBundle {
 
         String message();
 
+        String hint();
+
         String actions();
 
         String actionButton();

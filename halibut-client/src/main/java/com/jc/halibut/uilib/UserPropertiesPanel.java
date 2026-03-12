@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.jc.halibut.dto.LoginAccountDto;
 import com.jc.halibut.dto.LoginAccountRole;
@@ -20,6 +21,9 @@ public class UserPropertiesPanel extends DialogBox {
 
     private final TextBox usernameBox = new TextBox();
     private final TextBox displayNameBox = new TextBox();
+    private final PasswordTextBox passwordBox = new PasswordTextBox();
+    private final PasswordTextBox confirmPasswordBox = new PasswordTextBox();
+    private final Label passwordHintLabel = new Label();
     private final ListBox roleBox = new ListBox();
     private final CheckBox autoRestoreBox = new CheckBox("Auto restore session");
     private final CheckBox activeBox = new CheckBox("Active");
@@ -50,6 +54,21 @@ public class UserPropertiesPanel extends DialogBox {
         displayNameBox.setStylePrimaryName(RESOURCES.style().input());
         displayNameBox.setText(nullSafe(workingCopy.getDisplayName()));
         root.add(displayNameBox);
+
+        root.add(new Label("Password"));
+        passwordBox.setStylePrimaryName(RESOURCES.style().input());
+        root.add(passwordBox);
+
+        root.add(new Label("Confirm Password"));
+        confirmPasswordBox.setStylePrimaryName(RESOURCES.style().input());
+        root.add(confirmPasswordBox);
+
+        boolean isNewAccount = workingCopy.getId() == null;
+        passwordHintLabel.setStyleName(RESOURCES.style().hint());
+        passwordHintLabel.setText(isNewAccount
+                ? "Password is required for new users."
+                : "Leave password blank to keep the current one.");
+        root.add(passwordHintLabel);
 
         root.add(new Label("Role"));
         roleBox.setStylePrimaryName(RESOURCES.style().input());
@@ -98,6 +117,8 @@ public class UserPropertiesPanel extends DialogBox {
     private boolean readForm() {
         String username = trimToEmpty(usernameBox.getText());
         String displayName = trimToEmpty(displayNameBox.getText());
+        String password = trimToEmpty(passwordBox.getText());
+        String confirmPassword = trimToEmpty(confirmPasswordBox.getText());
 
         if (username.isEmpty()) {
             messageLabel.setText("Username is required.");
@@ -107,6 +128,26 @@ public class UserPropertiesPanel extends DialogBox {
         if (displayName.isEmpty()) {
             messageLabel.setText("Display Name is required.");
             return false;
+        }
+
+        boolean isNewAccount = workingCopy.getId() == null;
+        if (isNewAccount && password.isEmpty()) {
+            messageLabel.setText("Password is required for new users.");
+            return false;
+        }
+
+        if (!password.isEmpty() || !confirmPassword.isEmpty()) {
+            if (password.length() < 3) {
+                messageLabel.setText("Password must be at least 3 characters.");
+                return false;
+            }
+            if (!password.equals(confirmPassword)) {
+                messageLabel.setText("Passwords do not match.");
+                return false;
+            }
+            workingCopy.setPlainPassword(password);
+        } else {
+            workingCopy.setPlainPassword(null);
         }
 
         workingCopy.setUsername(username);
@@ -148,6 +189,7 @@ public class UserPropertiesPanel extends DialogBox {
         dto.setRole(source.getRole());
         dto.setAutoSessionRestoreEnabled(source.isAutoSessionRestoreEnabled());
         dto.setActive(source.isActive());
+        dto.setPlainPassword(source.getPlainPassword());
         return dto;
     }
 
