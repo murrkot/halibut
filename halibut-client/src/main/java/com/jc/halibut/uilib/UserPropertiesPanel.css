@@ -50,6 +50,13 @@
     color: #ff9f9f;
 }
 
+.hint {
+    font-size: 11px;
+    color: #c9d4e3;
+    margin-top: -2px;
+    margin-bottom: 2px;
+}
+
 .actions {
     display: flex;
     justify-content: flex-end;
