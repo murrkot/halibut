@@ -194,7 +194,7 @@ public class UsersGridPanel extends FlowPanel {
 
     private void bindShortcuts() {
         shortcutRegistration = Event.addNativePreviewHandler(event -> {
-            if (!isAttached() || event.getTypeInt() != Event.ONKEYDOWN) {
+            if (!isAttached() || !isVisible() || event.getTypeInt() != Event.ONKEYDOWN) {
                 return;
             }
 
