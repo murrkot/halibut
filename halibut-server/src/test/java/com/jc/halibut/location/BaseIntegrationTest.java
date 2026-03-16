@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -19,7 +21,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * repositories or interact with the database directly.
  * </p>
  */
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
+@DisabledOnOs(OS.WINDOWS)
 public abstract class BaseIntegrationTest {
 
     @Container
