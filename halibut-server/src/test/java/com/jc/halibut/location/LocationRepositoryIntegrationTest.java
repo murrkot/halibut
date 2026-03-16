@@ -113,6 +113,42 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
         Location location = repository.findAll().get(0);
         assertEquals("Trimmed", location.getName());
         assertEquals("Desc", location.getDescription());
+        assertEquals("UTC", location.getTimeZoneId());
+    }
+
+    @Test
+    void saveLocation_setsDefaultTimeZoneWhenMissing() {
+        LocationDto dto = new LocationDto(null, "Office UTC", "Default tz");
+
+        boolean saved = repository.saveLocation(dto);
+
+        assertTrue(saved);
+        Location location = repository.findAll().get(0);
+        assertEquals("UTC", location.getTimeZoneId());
+    }
+
+    @Test
+    void saveLocation_persistsProvidedTimeZone() {
+        LocationDto dto = new LocationDto(null, "Office East", "Eastern tz");
+        dto.setTimeZoneId("Europe/Kiev");
+
+        boolean saved = repository.saveLocation(dto);
+
+        assertTrue(saved);
+        Location location = repository.findAll().get(0);
+        assertEquals("Europe/Kiev", location.getTimeZoneId());
+    }
+
+    @Test
+    void saveLocation_trimsTimeZone() {
+        LocationDto dto = new LocationDto(null, "Office Trim", "Trim tz");
+        dto.setTimeZoneId("  America/New_York  ");
+
+        boolean saved = repository.saveLocation(dto);
+
+        assertTrue(saved);
+        Location location = repository.findAll().get(0);
+        assertEquals("America/New_York", location.getTimeZoneId());
     }
 
     @Test
@@ -147,6 +183,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
     void saveLocation_updatesExistingLocation() {
         Location existing = insertLocation("Old Name", "Old Desc");
         LocationDto dto = new LocationDto(existing.getId(), "Updated Name", "Updated Desc");
+        dto.setTimeZoneId("Europe/Paris");
 
         boolean saved = repository.saveLocation(dto);
 
@@ -154,6 +191,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
         Location updated = repository.findById(existing.getId());
         assertEquals("Updated Name", updated.getName());
         assertEquals("Updated Desc", updated.getDescription());
+        assertEquals("Europe/Paris", updated.getTimeZoneId());
     }
 
     @Test

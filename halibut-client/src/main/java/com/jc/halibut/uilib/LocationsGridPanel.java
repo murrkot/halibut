@@ -107,6 +107,8 @@ public class LocationsGridPanel extends FlowPanel {
                 GridColumnDescriptor.sortable("Name", 220,
                         LocationDto::getName,
                         Comparator.comparing(LocationDto::getName, Comparator.nullsLast(String::compareTo))),
+                GridColumnDescriptor.of("Time Zone", 200,
+                        dto -> dto.getTimeZoneId() == null ? "" : dto.getTimeZoneId()),
                 GridColumnDescriptor.of("Description", 520,
                         LocationDto::getDescription)
         );
@@ -436,6 +438,7 @@ public class LocationsGridPanel extends FlowPanel {
         dto.setId(source.getId());
         dto.setName(source.getName());
         dto.setDescription(source.getDescription());
+        dto.setTimeZoneId(source.getTimeZoneId());
         return dto;
     }
 

@@ -59,6 +59,7 @@ public final class CurrentLocation {
         copy.setId(location.getId());
         copy.setName(location.getName());
         copy.setDescription(location.getDescription());
+        copy.setTimeZoneId(location.getTimeZoneId());
         this.current = copy;
         notifyListeners();
     }
@@ -72,6 +73,7 @@ public final class CurrentLocation {
         copy.setId(current.getId());
         copy.setName(current.getName());
         copy.setDescription(current.getDescription());
+        copy.setTimeZoneId(current.getTimeZoneId());
         return copy;
     }
 

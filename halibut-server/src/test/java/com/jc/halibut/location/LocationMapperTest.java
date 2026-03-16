@@ -22,7 +22,7 @@ class LocationMapperTest {
 
     @Test
     void toDto_mapsEntityFieldsCorrectly() {
-        Location entity = createLocation(1L, "Office A", "Main office");
+        Location entity = createLocation(1L, "Office A", "Main office", "Europe/Kiev");
 
         LocationDto dto = mapper.toDto(entity);
 
@@ -30,6 +30,7 @@ class LocationMapperTest {
         assertEquals(1L, dto.getId());
         assertEquals("Office A", dto.getName());
         assertEquals("Main office", dto.getDescription());
+        assertEquals("Europe/Kiev", dto.getTimeZoneId());
     }
 
     @Test
@@ -40,8 +41,8 @@ class LocationMapperTest {
     @Test
     void toDtoList_mapsAllEntities() {
         List<Location> entities = Arrays.asList(
-                createLocation(1L, "Office A", "First office"),
-                createLocation(2L, "Office B", "Second office")
+                createLocation(1L, "Office A", "First office", "UTC"),
+                createLocation(2L, "Office B", "Second office", "Europe/Kiev")
         );
 
         List<LocationDto> dtos = mapper.toDtoList(entities);
@@ -67,10 +68,11 @@ class LocationMapperTest {
         assertTrue(dtos.isEmpty());
     }
 
-    private Location createLocation(Long id, String name, String description) {
+    private Location createLocation(Long id, String name, String description, String timeZoneId) {
         Location location = new Location();
         location.setName(name);
         location.setDescription(description);
+        location.setTimeZoneId(timeZoneId);
         // Location.id has no setter (generated), use reflection for testing
         try {
             var idField = Location.class.getDeclaredField("id");

@@ -1,8 +1,13 @@
 package com.jc.halibut.uilib;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.jc.halibut.AuthSession;
+import com.jc.halibut.CurrentLocation;
+import com.jc.halibut.dto.LocationDto;
 import com.jc.halibut.uilib.forms.AnalyticsFormPanel;
 import com.jc.halibut.uilib.forms.ClientsFormPanel;
 import com.jc.halibut.uilib.forms.HelpFormPanel;
@@ -25,6 +30,12 @@ public class DashboardPanel extends FlowPanel {
     private final Button openProfileButton = new Button("Profile");
     private final Button logoutButton = new Button("Logout");
 
+    private final Label statusLabel = new Label();
+    private final AuthSession authSession = AuthSession.getInstance();
+    private final CurrentLocation currentLocation = CurrentLocation.getInstance();
+    private final CurrentLocation.Listener locationListener = location -> updateStatus();
+    private Timer clockTimer;
+
     private final FlowPanel mainContent = new FlowPanel();
 
     public DashboardPanel() {
@@ -32,6 +43,10 @@ public class DashboardPanel extends FlowPanel {
 
         FlowPanel topArea = new FlowPanel();
         topArea.setStyleName("halibut-dashboard-top");
+
+        FlowPanel statusBar = new FlowPanel();
+        statusBar.setStyleName("halibut-dashboard-status");
+        statusBar.add(statusLabel);
 
         FlowPanel topMenu = new FlowPanel();
         topMenu.setStyleName("halibut-dashboard-menu");
@@ -42,6 +57,7 @@ public class DashboardPanel extends FlowPanel {
         topMenu.add(clientsButton);
         topMenu.add(settingsButton);
         topMenu.add(helpButton);
+        topArea.add(statusBar);
         topArea.add(topMenu);
 
         FlowPanel centerArea = new FlowPanel();
@@ -79,6 +95,8 @@ public class DashboardPanel extends FlowPanel {
 
         bindTopMenuHandlers();
         setDashboardButtonsEnabled(true);
+        currentLocation.addListener(locationListener);
+        updateStatus();
     }
 
     private void bindTopMenuHandlers() {
@@ -160,4 +178,67 @@ public class DashboardPanel extends FlowPanel {
     public Button getLogoutButton() {
         return logoutButton;
     }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (clockTimer == null) {
+            clockTimer = new Timer() {
+                @Override
+                public void run() {
+                    updateStatus();
+                }
+            };
+        }
+        clockTimer.scheduleRepeating(1000);
+    }
+
+    @Override
+    protected void onUnload() {
+        if (clockTimer != null) {
+            clockTimer.cancel();
+        }
+        currentLocation.removeListener(locationListener);
+        super.onUnload();
+    }
+
+    private void updateStatus() {
+        String user = nullSafe(authSession.getDisplayName(), "Unknown");
+        LocationDto location = currentLocation.getCurrent();
+        String locationName = location == null ? "Not set" : nullSafe(location.getName(), "Not set");
+        String timeZoneId = location == null ? "" : nullSafe(location.getTimeZoneId(), "");
+        if (timeZoneId.isEmpty()) {
+            timeZoneId = "UTC";
+        }
+        String time = formatLocalTime(timeZoneId);
+        statusLabel.setText("User: " + user + " | Location: " + locationName + " | Local Time: " + time);
+    }
+
+    private String nullSafe(String value, String fallback) {
+        if (value == null) {
+            return fallback;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? fallback : trimmed;
+    }
+
+    private String formatLocalTime(String timeZoneId) {
+        return formatLocalTimeNative(timeZoneId);
+    }
+
+    private static native String formatLocalTimeNative(String timeZoneId) /*-{
+        try {
+            var options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            if (timeZoneId && timeZoneId.length) {
+                options.timeZone = timeZoneId;
+            }
+            return new Intl.DateTimeFormat('en-GB', options).format(new Date());
+        } catch (e) {
+            try {
+                return new Date().toLocaleTimeString();
+            } catch (ignore) {
+                return '';
+            }
+        }
+    }-*/;
 }

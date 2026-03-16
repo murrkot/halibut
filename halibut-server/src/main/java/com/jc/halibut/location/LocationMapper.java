@@ -13,7 +13,7 @@ public class LocationMapper {
         if (entity == null) {
             return null;
         }
-        return new LocationDto(entity.getId(), entity.getName(), entity.getDescription());
+        return new LocationDto(entity.getId(), entity.getName(), entity.getDescription(), entity.getTimeZoneId());
     }
 
     public List<LocationDto> toDtoList(List<Location> entities) {

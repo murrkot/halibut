@@ -20,6 +20,9 @@ public class Location {
     @Column(nullable = false, length = 500)
     private String description;
 
+    @Column(name = "time_zone", nullable = false, length = 64)
+    private String timeZoneId = "UTC";
+
     public Long getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class Location {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTimeZoneId() {
+        return timeZoneId;
+    }
+
+    public void setTimeZoneId(String timeZoneId) {
+        this.timeZoneId = timeZoneId;
     }
 }

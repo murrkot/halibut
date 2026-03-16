@@ -7,14 +7,20 @@ public class LocationDto implements Serializable {
     private Long id;
     private String name;
     private String description;
+    private String timeZoneId;
 
     public LocationDto() {
     }
 
     public LocationDto(Long id, String name, String description) {
+        this(id, name, description, null);
+    }
+
+    public LocationDto(Long id, String name, String description, String timeZoneId) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.timeZoneId = timeZoneId;
     }
 
     public Long getId() {
@@ -39,5 +45,13 @@ public class LocationDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTimeZoneId() {
+        return timeZoneId;
+    }
+
+    public void setTimeZoneId(String timeZoneId) {
+        this.timeZoneId = timeZoneId;
     }
 }

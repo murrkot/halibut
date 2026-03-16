@@ -13,6 +13,10 @@
     <servlet-name>locationServlet</servlet-name>
     <servlet-class>com.jc.halibut.location.LocationServiceImpl</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>timeZoneServlet</servlet-name>
+    <servlet-class>com.jc.halibut.timezone.TimeZoneServiceImpl</servlet-class>
+  </servlet>
 <servlet-mapping>
     <servlet-name>loginServlet</servlet-name>
     <url-pattern>/happ/login</url-pattern>
@@ -21,6 +25,10 @@
   <servlet-mapping>
     <servlet-name>locationServlet</servlet-name>
     <url-pattern>/happ/location</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>timeZoneServlet</servlet-name>
+    <url-pattern>/happ/timezone</url-pattern>
   </servlet-mapping>
 
   <!-- Default page to serve -->
