@@ -45,6 +45,7 @@ public class LocationPropertiesPanel extends DialogBox {
 
         RESOURCES.style().ensureInjected();
         setStyleName(RESOURCES.style().dialog());
+        addStyleName(RESOURCES.style().centered());
 
         this.workingCopy = copyOf(initialValue);
 

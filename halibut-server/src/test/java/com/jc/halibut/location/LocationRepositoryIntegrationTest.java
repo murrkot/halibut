@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +36,10 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
             Location location = new Location();
             location.setName(name);
             location.setDescription(description);
+            location.setCreatedBy("seed");
+            location.setCreatedAt(Instant.now());
+            location.setLastUpdatedBy("seed");
+            location.setLastUpdatedAt(Instant.now());
             session.persist(location);
             tx.commit();
             return location;
@@ -95,7 +100,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
     void saveLocation_createsNewLocation() {
         LocationDto dto = new LocationDto(null, "New Office", "Brand new");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         List<Location> all = repository.findAll();
@@ -107,7 +112,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
     void saveLocation_trimsNameAndDescription() {
         LocationDto dto = new LocationDto(null, "  Trimmed  ", "  Desc  ");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         Location location = repository.findAll().get(0);
@@ -120,7 +125,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
     void saveLocation_setsDefaultTimeZoneWhenMissing() {
         LocationDto dto = new LocationDto(null, "Office UTC", "Default tz");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         Location location = repository.findAll().get(0);
@@ -132,7 +137,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
         LocationDto dto = new LocationDto(null, "Office East", "Eastern tz");
         dto.setTimeZoneId("Europe/Kiev");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         Location location = repository.findAll().get(0);
@@ -144,7 +149,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
         LocationDto dto = new LocationDto(null, "Office Trim", "Trim tz");
         dto.setTimeZoneId("  America/New_York  ");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         Location location = repository.findAll().get(0);
@@ -153,28 +158,28 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void saveLocation_returnsFalseForNullDto() {
-        assertFalse(repository.saveLocation(null));
+        assertFalse(repository.saveLocation(null, "tester"));
     }
 
     @Test
     void saveLocation_returnsFalseForBlankName() {
         LocationDto dto = new LocationDto(null, "  ", "Description");
 
-        assertFalse(repository.saveLocation(dto));
+        assertFalse(repository.saveLocation(dto, "tester"));
     }
 
     @Test
     void saveLocation_returnsFalseForNullName() {
         LocationDto dto = new LocationDto(null, null, "Description");
 
-        assertFalse(repository.saveLocation(dto));
+        assertFalse(repository.saveLocation(dto, "tester"));
     }
 
     @Test
     void saveLocation_returnsFalseForBlankDescription() {
         LocationDto dto = new LocationDto(null, "Name", "  ");
 
-        assertFalse(repository.saveLocation(dto));
+        assertFalse(repository.saveLocation(dto, "tester"));
     }
 
     // --- saveLocation (update) ---
@@ -185,7 +190,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
         LocationDto dto = new LocationDto(existing.getId(), "Updated Name", "Updated Desc");
         dto.setTimeZoneId("Europe/Paris");
 
-        boolean saved = repository.saveLocation(dto);
+        boolean saved = repository.saveLocation(dto, "tester");
 
         assertTrue(saved);
         Location updated = repository.findById(existing.getId());
@@ -198,7 +203,7 @@ class LocationRepositoryIntegrationTest extends BaseIntegrationTest {
     void saveLocation_returnsFalseForNonExistentId() {
         LocationDto dto = new LocationDto(99999L, "Name", "Desc");
 
-        assertFalse(repository.saveLocation(dto));
+        assertFalse(repository.saveLocation(dto, "tester"));
     }
 
     // --- deleteLocation ---

@@ -13,7 +13,12 @@ public class LocationMapper {
         if (entity == null) {
             return null;
         }
-        return new LocationDto(entity.getId(), entity.getName(), entity.getDescription(), entity.getTimeZoneId());
+        LocationDto dto = new LocationDto(entity.getId(), entity.getName(), entity.getDescription(), entity.getTimeZoneId());
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setCreatedAt(toMillis(entity.getCreatedAt()));
+        dto.setLastUpdatedBy(entity.getLastUpdatedBy());
+        dto.setLastUpdatedAt(toMillis(entity.getLastUpdatedAt()));
+        return dto;
     }
 
     public List<LocationDto> toDtoList(List<Location> entities) {
@@ -29,5 +34,12 @@ public class LocationMapper {
             }
         }
         return result;
+    }
+
+    private long toMillis(java.time.Instant instant) {
+        if (instant == null) {
+            return 0L;
+        }
+        return instant.toEpochMilli();
     }
 }

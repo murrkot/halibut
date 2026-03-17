@@ -189,19 +189,19 @@ class LocationServiceImplTest {
         void returnsTrue_whenAuthorizedAndSaveSucceeds() {
             mockAuthorizedSession(LoginRole.ADMIN);
             LocationDto dto = new LocationDto(null, "New Location", "New desc");
-            when(locationRepository.saveLocation(dto)).thenReturn(true);
+            when(locationRepository.saveLocation(eq(dto), anyString())).thenReturn(true);
 
             boolean result = service.saveLocation(USER_ID, SESSION_ID, SECURITY_TOKEN, dto);
 
             assertTrue(result);
-            verify(locationRepository).saveLocation(dto);
+            verify(locationRepository).saveLocation(eq(dto), anyString());
         }
 
         @Test
         void returnsFalse_whenAuthorizedButSaveFails() {
             mockAuthorizedSession(LoginRole.MANAGER);
             LocationDto dto = new LocationDto(null, "New Location", "New desc");
-            when(locationRepository.saveLocation(dto)).thenReturn(false);
+            when(locationRepository.saveLocation(eq(dto), anyString())).thenReturn(false);
 
             boolean result = service.saveLocation(USER_ID, SESSION_ID, SECURITY_TOKEN, dto);
 

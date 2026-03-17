@@ -19,6 +19,8 @@ public interface UserPropertiesPanelResources extends ClientBundle {
         String actions();
 
         String actionButton();
+
+        String centered();
     }
 
     @Source("UserPropertiesPanel.css")

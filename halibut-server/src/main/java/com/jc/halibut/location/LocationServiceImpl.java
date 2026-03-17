@@ -75,7 +75,7 @@ public class LocationServiceImpl extends RemoteServiceServlet implements Locatio
         if (!isAuthorizedForLocationManagement(userId, sessionId, securityToken)) {
             return false;
         }
-        return locationRepository.saveLocation(location);
+        return locationRepository.saveLocation(location, resolveUserName(userId));
     }
 
     @Override

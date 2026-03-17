@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,10 +41,12 @@ public class LocationRepository {
         }
     }
 
-    public boolean saveLocation(LocationDto locationDto) {
+    public boolean saveLocation(LocationDto locationDto, String userName) {
         if (locationDto == null || isBlank(locationDto.getName()) || isBlank(locationDto.getDescription())) {
             return false;
         }
+        String normalizedUser = normalizeUserName(userName);
+        Instant now = Instant.now();
 
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
@@ -53,6 +56,7 @@ public class LocationRepository {
             if (locationDto.getId() == null) {
                 entity = new Location();
                 applyDto(entity, locationDto);
+                applyAuditOnCreate(entity, normalizedUser, now);
                 session.persist(entity);
             } else {
                 entity = session.find(Location.class, locationDto.getId());
@@ -61,6 +65,7 @@ public class LocationRepository {
                     return false;
                 }
                 applyDto(entity, locationDto);
+                applyAuditOnUpdate(entity, normalizedUser, now);
                 session.merge(entity);
             }
 
@@ -107,11 +112,13 @@ public class LocationRepository {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
+            Instant now = Instant.now();
             for (SeedLocation seed : locations) {
                 Location location = new Location();
                 location.setName(seed.name());
                 location.setDescription(seed.description());
                 location.setTimeZoneId(randomSeedTimeZone());
+                applyAuditOnCreate(location, "seed", now);
                 session.persist(location);
             }
             tx.commit();
@@ -127,6 +134,24 @@ public class LocationRepository {
         entity.setName(dto.getName().trim());
         entity.setDescription(dto.getDescription().trim());
         entity.setTimeZoneId(resolveTimeZoneId(dto.getTimeZoneId()));
+    }
+
+    private void applyAuditOnCreate(Location entity, String userName, Instant now) {
+        entity.setCreatedBy(userName);
+        entity.setCreatedAt(now);
+        entity.setLastUpdatedBy(userName);
+        entity.setLastUpdatedAt(now);
+    }
+
+    private void applyAuditOnUpdate(Location entity, String userName, Instant now) {
+        if (isBlank(entity.getCreatedBy())) {
+            entity.setCreatedBy(userName);
+        }
+        if (entity.getCreatedAt() == null) {
+            entity.setCreatedAt(now);
+        }
+        entity.setLastUpdatedBy(userName);
+        entity.setLastUpdatedAt(now);
     }
 
     private String resolveTimeZoneId(String timeZoneId) {
@@ -157,6 +182,13 @@ public class LocationRepository {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private String normalizeUserName(String userName) {
+        if (isBlank(userName)) {
+            return "unknown";
+        }
+        return userName.trim();
     }
 
     public record SeedLocation(String name, String description) {

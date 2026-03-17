@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +23,10 @@ class LocationMapperTest {
 
     @Test
     void toDto_mapsEntityFieldsCorrectly() {
-        Location entity = createLocation(1L, "Office A", "Main office", "Europe/Kiev");
+        Instant createdAt = Instant.parse("2026-03-17T10:15:30Z");
+        Instant updatedAt = Instant.parse("2026-03-17T11:45:00Z");
+        Location entity = createLocation(1L, "Office A", "Main office", "Europe/Kiev",
+                "admin", createdAt, "manager", updatedAt);
 
         LocationDto dto = mapper.toDto(entity);
 
@@ -31,6 +35,10 @@ class LocationMapperTest {
         assertEquals("Office A", dto.getName());
         assertEquals("Main office", dto.getDescription());
         assertEquals("Europe/Kiev", dto.getTimeZoneId());
+        assertEquals("admin", dto.getCreatedBy());
+        assertEquals(createdAt.toEpochMilli(), dto.getCreatedAt());
+        assertEquals("manager", dto.getLastUpdatedBy());
+        assertEquals(updatedAt.toEpochMilli(), dto.getLastUpdatedAt());
     }
 
     @Test
@@ -41,8 +49,10 @@ class LocationMapperTest {
     @Test
     void toDtoList_mapsAllEntities() {
         List<Location> entities = Arrays.asList(
-                createLocation(1L, "Office A", "First office", "UTC"),
-                createLocation(2L, "Office B", "Second office", "Europe/Kiev")
+                createLocation(1L, "Office A", "First office", "UTC",
+                        "seed", Instant.parse("2026-03-17T09:00:00Z"), "seed", Instant.parse("2026-03-17T09:00:00Z")),
+                createLocation(2L, "Office B", "Second office", "Europe/Kiev",
+                        "admin", Instant.parse("2026-03-17T10:00:00Z"), "admin", Instant.parse("2026-03-17T10:30:00Z"))
         );
 
         List<LocationDto> dtos = mapper.toDtoList(entities);
@@ -68,11 +78,17 @@ class LocationMapperTest {
         assertTrue(dtos.isEmpty());
     }
 
-    private Location createLocation(Long id, String name, String description, String timeZoneId) {
+    private Location createLocation(Long id, String name, String description, String timeZoneId,
+                                    String createdBy, Instant createdAt,
+                                    String updatedBy, Instant updatedAt) {
         Location location = new Location();
         location.setName(name);
         location.setDescription(description);
         location.setTimeZoneId(timeZoneId);
+        location.setCreatedBy(createdBy);
+        location.setCreatedAt(createdAt);
+        location.setLastUpdatedBy(updatedBy);
+        location.setLastUpdatedAt(updatedAt);
         // Location.id has no setter (generated), use reflection for testing
         try {
             var idField = Location.class.getDeclaredField("id");

@@ -8,6 +8,10 @@ public class LocationDto implements Serializable {
     private String name;
     private String description;
     private String timeZoneId;
+    private String createdBy;
+    private long createdAt;
+    private String lastUpdatedBy;
+    private long lastUpdatedAt;
 
     public LocationDto() {
     }
@@ -53,5 +57,37 @@ public class LocationDto implements Serializable {
 
     public void setTimeZoneId(String timeZoneId) {
         this.timeZoneId = timeZoneId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public long getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+
+    public void setLastUpdatedAt(long lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

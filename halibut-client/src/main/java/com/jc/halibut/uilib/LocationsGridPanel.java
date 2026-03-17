@@ -13,6 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.jc.halibut.AuthSession;
 import com.jc.halibut.CurrentLocation;
 import com.jc.halibut.location.LocationService;
@@ -100,6 +101,7 @@ public class LocationsGridPanel extends FlowPanel {
     }
 
     private void configureGrid() {
+        DateTimeFormat formatter = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss");
         List<GridColumnDescriptor<LocationDto>> columns = List.of(
                 GridColumnDescriptor.sortable("Id", 90,
                         dto -> dto.getId() == null ? "" : String.valueOf(dto.getId()),
@@ -109,12 +111,27 @@ public class LocationsGridPanel extends FlowPanel {
                         Comparator.comparing(LocationDto::getName, Comparator.nullsLast(String::compareTo))),
                 GridColumnDescriptor.of("Time Zone", 200,
                         dto -> dto.getTimeZoneId() == null ? "" : dto.getTimeZoneId()),
+                GridColumnDescriptor.of("Created By", 140,
+                        dto -> dto.getCreatedBy() == null ? "" : dto.getCreatedBy()),
+                GridColumnDescriptor.of("Created At", 170,
+                        dto -> formatTimestamp(dto.getCreatedAt(), formatter)),
+                GridColumnDescriptor.of("Updated By", 140,
+                        dto -> dto.getLastUpdatedBy() == null ? "" : dto.getLastUpdatedBy()),
+                GridColumnDescriptor.of("Updated At", 170,
+                        dto -> formatTimestamp(dto.getLastUpdatedAt(), formatter)),
                 GridColumnDescriptor.of("Description", 520,
                         LocationDto::getDescription)
         );
 
         locationsGrid.setAdaptiveHeight(false);
         locationsGrid.setColumns(columns);
+    }
+
+    private String formatTimestamp(long timestamp, DateTimeFormat formatter) {
+        if (timestamp <= 0) {
+            return "";
+        }
+        return formatter.format(new Date(timestamp));
     }
 
     @Override
@@ -434,6 +451,10 @@ public class LocationsGridPanel extends FlowPanel {
         dto.setName(source.getName());
         dto.setDescription(source.getDescription());
         dto.setTimeZoneId(source.getTimeZoneId());
+        dto.setCreatedBy(source.getCreatedBy());
+        dto.setCreatedAt(source.getCreatedAt());
+        dto.setLastUpdatedBy(source.getLastUpdatedBy());
+        dto.setLastUpdatedAt(source.getLastUpdatedAt());
         return dto;
     }
 
