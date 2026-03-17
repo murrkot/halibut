@@ -8,6 +8,7 @@ import com.jc.halibut.auth.LoginAccountMapper;
 import com.jc.halibut.auth.LoginAccountRepository;
 import com.jc.halibut.dto.LoginAccountDto;
 import com.jc.halibut.dto.LoginAccountRole;
+import com.jc.halibut.location.LocationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,8 @@ class LoginServiceImplTest {
     private LoginAccountMapper loginAccountMapper;
     @Mock
     private AuditEventRepository auditEventRepository;
+    @Mock
+    private LocationRepository locationRepository;
 
     private LoginServiceImpl service;
 
@@ -42,7 +45,8 @@ class LoginServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new LoginServiceImpl(accountRepository, activeSessionRepository, loginAccountMapper, auditEventRepository);
+        service = new LoginServiceImpl(accountRepository, activeSessionRepository, loginAccountMapper,
+                auditEventRepository, locationRepository);
     }
 
     private void mockAuthorizedSession(LoginRole role) {

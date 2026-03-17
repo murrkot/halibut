@@ -4,6 +4,7 @@ import com.jc.halibut.Entity.Location;
 import com.jc.halibut.Entity.LoginAccount;
 import com.jc.halibut.Entity.LoginRole;
 import com.jc.halibut.auth.ActiveSessionRepository;
+import com.jc.halibut.auth.AuditEventRepository;
 import com.jc.halibut.auth.LoginAccountRepository;
 import com.jc.halibut.dto.LocationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,8 @@ class LocationServiceImplTest {
     private LocationRepository locationRepository;
     @Mock
     private LocationMapper locationMapper;
+    @Mock
+    private AuditEventRepository auditEventRepository;
 
     private LocationServiceImpl service;
 
@@ -41,7 +44,7 @@ class LocationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new LocationServiceImpl(activeSessionRepository, accountRepository, locationRepository, locationMapper);
+        service = new LocationServiceImpl(activeSessionRepository, accountRepository, locationRepository, locationMapper, auditEventRepository);
     }
 
     // --- Authorization helper ---

@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.jc.halibut.AuthSession;
-import com.jc.halibut.CurrentLocation;
 import com.jc.halibut.audit.AuditService;
 import com.jc.halibut.audit.AuditServiceAsync;
 import com.jc.halibut.dto.AuditEventDto;
@@ -69,12 +68,14 @@ public class AuditLogGridPanel extends FlowPanel {
                 GridColumnDescriptor.sortable("User", 160,
                         dto -> dto.getUserName() == null ? "" : dto.getUserName(),
                         Comparator.comparing(dto -> dto.getUserName() == null ? "" : dto.getUserName())),
+                GridColumnDescriptor.of("Location", 200,
+                        dto -> dto.getLocationName() == null ? "" : dto.getLocationName()),
                 GridColumnDescriptor.of("IP", 140,
                         dto -> dto.getRemoteAddress() == null ? "" : dto.getRemoteAddress()),
                 GridColumnDescriptor.of("Success", 90,
                         dto -> dto.isSuccess() ? "Yes" : "No"),
                 GridColumnDescriptor.of("Details", 320,
-                        this::formatDetails)
+                        dto -> dto.getDetails() == null ? "" : dto.getDetails())
         );
 
         auditGrid.setAdaptiveHeight(false);
@@ -93,23 +94,6 @@ public class AuditLogGridPanel extends FlowPanel {
         return formatter.format(new Date(ts));
     }
 
-    private String formatDetails(AuditEventDto dto) {
-        if (dto == null) {
-            return "";
-        }
-        String details = dto.getDetails() == null ? "" : dto.getDetails();
-        String currentLocation = CurrentLocation.getInstance().getCurrentName();
-        if (currentLocation == null || currentLocation.trim().isEmpty()) {
-            return details;
-        }
-        if (details.toLowerCase().contains("location:")) {
-            return details;
-        }
-        if (details.isEmpty()) {
-            return "Location: " + currentLocation;
-        }
-        return details + " | Location: " + currentLocation;
-    }
 
     private void loadAuditEvents() {
         if (!authSession.hasSession()) {
@@ -135,6 +119,7 @@ public class AuditLogGridPanel extends FlowPanel {
                         if (result != null) {
                             currentRows.addAll(result);
                         }
+                        currentRows.sort(Comparator.comparingLong(AuditEventDto::getEventTime).reversed());
                         auditGrid.setRows(currentRows);
                         setLoadedInfo("Loaded " + currentRows.size() + " record(s).");
                         updateGridHeightToMiddleArea();

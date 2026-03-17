@@ -4,5 +4,6 @@ public enum AuditEventType {
     LOGIN,
     LOGOUT,
     TIMEOUT,
-    WRONG_PASSWORD
+    WRONG_PASSWORD,
+    LOCATION_SET
 }

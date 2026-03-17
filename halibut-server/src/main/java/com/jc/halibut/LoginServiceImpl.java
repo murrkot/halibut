@@ -13,6 +13,7 @@ import com.jc.halibut.auth.LoginAccountRepository;
 import com.jc.halibut.auth.SessionCleanupService;
 import com.jc.halibut.auth.ServerInjector;
 import com.jc.halibut.dto.LoginAccountDto;
+import com.jc.halibut.location.LocationRepository;
 import jakarta.servlet.http.Cookie;
 
 import java.time.Duration;
@@ -32,13 +33,15 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     private final ActiveSessionRepository activeSessionRepository;
     private final LoginAccountMapper loginAccountMapper;
     private final AuditEventRepository auditEventRepository;
+    private final LocationRepository locationRepository;
 
     public LoginServiceImpl() {
         this(
                 ServerInjector.getInjector().getInstance(LoginAccountRepository.class),
                 ServerInjector.getInjector().getInstance(ActiveSessionRepository.class),
                 ServerInjector.getInjector().getInstance(LoginAccountMapper.class),
-                ServerInjector.getInjector().getInstance(AuditEventRepository.class)
+                ServerInjector.getInjector().getInstance(AuditEventRepository.class),
+                ServerInjector.getInjector().getInstance(LocationRepository.class)
         );
     }
 
@@ -46,11 +49,13 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     public LoginServiceImpl(LoginAccountRepository accountRepository,
                             ActiveSessionRepository activeSessionRepository,
                             LoginAccountMapper loginAccountMapper,
-                            AuditEventRepository auditEventRepository) {
+                            AuditEventRepository auditEventRepository,
+                            LocationRepository locationRepository) {
         this.accountRepository = accountRepository;
         this.activeSessionRepository = activeSessionRepository;
         this.loginAccountMapper = loginAccountMapper;
         this.auditEventRepository = auditEventRepository;
+        this.locationRepository = locationRepository;
         SessionCleanupService.ensureStarted(activeSessionRepository);
     }
 
@@ -60,6 +65,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         String normalizedPassword = password == null ? "" : password.trim();
 
         if (normalizedUser.isEmpty() || normalizedPassword.isEmpty()) {
+            LocationSnapshot snapshot = resolveLocationFromCookies();
             auditEventRepository.logEvent(
                     AuditEventType.WRONG_PASSWORD,
                     null,
@@ -67,12 +73,14 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                     null,
                     resolveRemoteAddress(),
                     false,
-                    appendLocationDetails("Missing username or password", null));
+                    appendLocationDetails("Missing username or password", snapshot.locationLabel()),
+                    snapshot.locationName());
             return new LoginResponse(false, "Username and password are required.", null);
         }
 
         Optional<LoginAccount> account = accountRepository.findActiveByCredentials(normalizedUser, normalizedPassword);
         if (account.isEmpty()) {
+            LocationSnapshot snapshot = resolveLocationFromCookies();
             auditEventRepository.logEvent(
                     AuditEventType.WRONG_PASSWORD,
                     null,
@@ -80,7 +88,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                     null,
                     resolveRemoteAddress(),
                     false,
-                    appendLocationDetails("Invalid credentials", null));
+                    appendLocationDetails("Invalid credentials", snapshot.locationLabel()),
+                    snapshot.locationName());
             return new LoginResponse(false, "Invalid credentials.", null);
         }
 
@@ -104,7 +113,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 activeSession.getSessionId(),
                 resolveRemoteAddress(),
                 true,
-                appendLocationDetails("Login successful", activeSession));
+                appendLocationDetails("Login successful", locationSnapshot.locationLabel()),
+                locationSnapshot.locationName());
 
         return new LoginResponse(
                 true,
@@ -123,6 +133,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     public boolean validateSession(Long userId, String sessionId, String securityToken) throws IllegalArgumentException {
         ActiveSessionRepository.SessionStatus status =
                 activeSessionRepository.getSessionStatus(userId, sessionId, securityToken);
+        LocationSnapshot snapshot = resolveLocationFromCookies();
         if (status == ActiveSessionRepository.SessionStatus.EXPIRED) {
             auditEventRepository.logEvent(
                     AuditEventType.TIMEOUT,
@@ -131,7 +142,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                     sessionId,
                     resolveRemoteAddress(),
                     false,
-                    appendLocationDetails("Session expired", resolveSession(userId, sessionId, securityToken)));
+                    appendLocationDetails("Session expired", snapshot.locationLabel()),
+                    snapshot.locationName());
         }
         if (status == ActiveSessionRepository.SessionStatus.ACTIVE) {
             syncSessionLocationFromCookies(userId, sessionId, securityToken);
@@ -142,6 +154,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
     @Override
     public boolean deactivateSession(Long userId, String sessionId, String securityToken) throws IllegalArgumentException {
+        LocationSnapshot snapshot = resolveLocationFromCookies();
         boolean result = activeSessionRepository.deactivateSession(userId, sessionId, securityToken);
         if (result) {
             auditEventRepository.logEvent(
@@ -151,7 +164,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                     sessionId,
                     resolveRemoteAddress(),
                     true,
-                    appendLocationDetails("Logout", resolveSession(userId, sessionId, securityToken)));
+                    appendLocationDetails("Logout", snapshot.locationLabel()),
+                    snapshot.locationName());
         }
         return result;
     }
@@ -303,6 +317,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         }
 
         String username = resolveUserName(userId, null);
+        LocationSnapshot snapshot = resolveLocationFromCookies();
 
         auditEventRepository.logEvent(
                 AuditEventType.LOGIN,
@@ -311,12 +326,12 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 sessionId,
                 resolveRemoteAddress(),
                 true,
-                appendLocationDetails("Session restored", resolveSession(userId, sessionId, securityToken)));
+                appendLocationDetails("Session restored", snapshot.locationLabel()),
+                snapshot.locationName());
     }
 
-    private String appendLocationDetails(String details, ActiveSession activeSession) {
-        String location = resolveLocationSummary(activeSession);
-        if (location.isEmpty()) {
+    private String appendLocationDetails(String details, String location) {
+        if (location == null || location.isEmpty()) {
             return details;
         }
         if (details == null || details.trim().isEmpty()) {
@@ -325,30 +340,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         return details + " | Location: " + location;
     }
 
-    private String resolveLocationSummary(ActiveSession activeSession) {
-        if (activeSession == null) {
-            return "";
-        }
-        String name = activeSession.getLocationName() == null ? "" : activeSession.getLocationName().trim();
-        Long id = activeSession.getLocationId();
-        if (!name.isEmpty() && id != null) {
-            return name + " (id=" + id + ")";
-        }
-        if (!name.isEmpty()) {
-            return name;
-        }
-        return id == null ? "" : String.valueOf(id);
-    }
-
     private void syncSessionLocationFromCookies(Long userId, String sessionId, String securityToken) {
         ActiveSession activeSession = resolveSession(userId, sessionId, securityToken);
         if (activeSession == null) {
-            return;
-        }
-
-        boolean hasLocation = activeSession.getLocationId() != null
-                || (activeSession.getLocationName() != null && !activeSession.getLocationName().trim().isEmpty());
-        if (hasLocation) {
             return;
         }
 
@@ -371,10 +365,10 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         try {
             cookies = getThreadLocalRequest().getCookies();
         } catch (RuntimeException ex) {
-            return new LocationSnapshot(null, "");
+            return LocationSnapshot.notSet();
         }
         if (cookies == null || cookies.length == 0) {
-            return new LocationSnapshot(null, "");
+            return LocationSnapshot.notSet();
         }
 
         String rawId = null;
@@ -391,7 +385,13 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         }
 
         Long id = parseLocationId(rawId);
-        String name = decodeCookieValue(rawName);
+        String name = resolveLocationNameById(id);
+        if (name.isEmpty()) {
+            name = decodeCookieValue(rawName);
+        }
+        if (name == null || name.trim().isEmpty()) {
+            return LocationSnapshot.notSet();
+        }
         return new LocationSnapshot(id, name);
     }
 
@@ -421,6 +421,30 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         return activeSessionRepository.findActiveSession(userId, sessionId, securityToken).orElse(null);
     }
 
+    private String resolveLocationNameById(Long locationId) {
+        if (locationId == null) {
+            return "";
+        }
+        var location = locationRepository.findById(locationId);
+        if (location == null || location.getName() == null) {
+            return "";
+        }
+        return location.getName().trim();
+    }
+
     private record LocationSnapshot(Long locationId, String locationName) {
+        static LocationSnapshot notSet() {
+            return new LocationSnapshot(null, "Location not set");
+        }
+
+        String locationLabel() {
+            if (locationName == null || locationName.trim().isEmpty()) {
+                return "";
+            }
+            if (locationId == null) {
+                return locationName;
+            }
+            return locationName + " (id=" + locationId + ")";
+        }
     }
 }

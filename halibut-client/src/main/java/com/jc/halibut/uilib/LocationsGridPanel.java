@@ -351,10 +351,6 @@ public class LocationsGridPanel extends FlowPanel {
 
     private void applyCurrentLocation(LocationDto selected) {
         Date expires = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365 * 20);
-        String appPath = resolveAppPath();
-
-        Cookies.setCookie(CurrentLocation.COOKIE_LOCATION_ID, String.valueOf(selected.getId()), expires, appPath, null, false);
-        Cookies.setCookie(CurrentLocation.COOKIE_LOCATION_NAME, URL.encodeQueryString(selected.getName().trim()), expires, appPath, null, false);
 
         locationService.getLocationById(
                 authSession.getUserId(),
@@ -364,6 +360,7 @@ public class LocationsGridPanel extends FlowPanel {
                 new AsyncCallback<>() {
                     @Override
                     public void onFailure(Throwable caught) {
+                        persistLocationCookie(selected, expires);
                         CurrentLocation.getInstance().setCurrent(selected);
                         setStatus("Location is set: " + selected.getName());
                     }
@@ -371,29 +368,27 @@ public class LocationsGridPanel extends FlowPanel {
                     @Override
                     public void onSuccess(LocationDto result) {
                         if (result == null) {
+                            persistLocationCookie(selected, expires);
                             CurrentLocation.getInstance().setCurrent(selected);
                             setStatus("Location is set: " + selected.getName());
                             return;
                         }
 
+                        persistLocationCookie(result, expires);
                         CurrentLocation.getInstance().setCurrent(result);
                         setStatus("Location is set: " + result.getName());
                     }
                 }
         );
     }
-    private String resolveAppPath() {
-        String path = Window.Location.getPath();
-        if (path == null || path.isEmpty()) {
-            return "/";
-        }
 
-        int slashIndex = path.lastIndexOf('/');
-        if (slashIndex <= 0) {
-            return "/";
+    private void persistLocationCookie(LocationDto location, Date expires) {
+        if (location == null || location.getId() == null || location.getName() == null) {
+            return;
         }
-
-        return path.substring(0, slashIndex + 1);
+        String cookiePath = "/";
+        Cookies.setCookie(CurrentLocation.COOKIE_LOCATION_ID, String.valueOf(location.getId()), expires, cookiePath, null, false);
+        Cookies.setCookie(CurrentLocation.COOKIE_LOCATION_NAME, URL.encodeQueryString(location.getName().trim()), expires, cookiePath, null, false);
     }
     private void saveLocation(LocationDto location, String successMessage) {
         if (!authSession.hasSession()) {

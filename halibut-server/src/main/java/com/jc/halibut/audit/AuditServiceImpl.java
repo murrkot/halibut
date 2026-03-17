@@ -81,7 +81,8 @@ public class AuditServiceImpl extends RemoteServiceServlet implements AuditServi
                     event.getSessionId(),
                     event.getRemoteAddress(),
                     event.isSuccess(),
-                    event.getDetails()
+                    event.getDetails(),
+                    event.getLocationName()
             ));
         }
         return dtos;

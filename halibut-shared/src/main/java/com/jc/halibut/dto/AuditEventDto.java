@@ -9,6 +9,7 @@ public class AuditEventDto implements Serializable {
     private String eventType;
     private Long userId;
     private String userName;
+    private String locationName;
     private String sessionId;
     private String remoteAddress;
     private boolean success;
@@ -18,7 +19,7 @@ public class AuditEventDto implements Serializable {
     }
 
     public AuditEventDto(Long id, long eventTime, String eventType, Long userId, String userName,
-                         String sessionId, String remoteAddress, boolean success, String details) {
+                         String sessionId, String remoteAddress, boolean success, String details, String locationName) {
         this.id = id;
         this.eventTime = eventTime;
         this.eventType = eventType;
@@ -28,6 +29,7 @@ public class AuditEventDto implements Serializable {
         this.remoteAddress = remoteAddress;
         this.success = success;
         this.details = details;
+        this.locationName = locationName;
     }
 
     public Long getId() {
@@ -68,6 +70,14 @@ public class AuditEventDto implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getSessionId() {

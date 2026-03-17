@@ -17,7 +17,7 @@ public class AuditEventRepository {
     }
 
     public void logEvent(AuditEventType type, Long userId, String userName, String sessionId,
-                         String remoteAddress, boolean success, String details) {
+                         String remoteAddress, boolean success, String details, String locationName) {
         if (type == null) {
             return;
         }
@@ -26,6 +26,7 @@ public class AuditEventRepository {
         event.setEventTime(Instant.now());
         event.setEventType(type.name());
         event.setUserName(userName);
+        event.setLocationName(locationName);
         event.setSessionId(sessionId);
         event.setRemoteAddress(remoteAddress);
         event.setSuccess(success);

@@ -26,6 +26,9 @@ public class AuditEvent {
     @Column(name = "user_name", length = 100)
     private String userName;
 
+    @Column(name = "location_name", length = 200)
+    private String locationName;
+
     @Column(name = "session_id", length = 64)
     private String sessionId;
 
@@ -64,6 +67,14 @@ public class AuditEvent {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getSessionId() {
