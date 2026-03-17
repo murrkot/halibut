@@ -14,7 +14,7 @@
         <property name="hibernate.hbm2ddl.auto">create</property>
         <property name="hibernate.hbm2ddl.create_namespaces">true</property>
 
-        <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.jdbc.time_zone">UTC</property>
     </session-factory>

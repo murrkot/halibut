@@ -32,6 +32,9 @@ public class LoginAccount {
     @Column(name = "auto_session_restore_enabled", nullable = false)
     private boolean autoSessionRestoreEnabled = false;
 
+    @Column(name = "session_timeout", nullable = false, length = 16)
+    private String sessionTimeout = "30m";
+
     @Column(nullable = false)
     private boolean active = true;
 
@@ -85,5 +88,13 @@ public class LoginAccount {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(String sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
     }
 }

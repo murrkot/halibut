@@ -11,18 +11,25 @@ public class LoginAccountDto implements Serializable {
     private boolean autoSessionRestoreEnabled;
     private boolean active;
     private String plainPassword;
+    private String sessionTimeout;
 
     public LoginAccountDto() {
     }
 
     public LoginAccountDto(Long id, String username, String displayName, LoginAccountRole role,
                            boolean autoSessionRestoreEnabled, boolean active) {
+        this(id, username, displayName, role, autoSessionRestoreEnabled, active, null);
+    }
+
+    public LoginAccountDto(Long id, String username, String displayName, LoginAccountRole role,
+                           boolean autoSessionRestoreEnabled, boolean active, String sessionTimeout) {
         this.id = id;
         this.username = username;
         this.displayName = displayName;
         this.role = role;
         this.autoSessionRestoreEnabled = autoSessionRestoreEnabled;
         this.active = active;
+        this.sessionTimeout = sessionTimeout;
     }
 
     public Long getId() {
@@ -79,5 +86,13 @@ public class LoginAccountDto implements Serializable {
 
     public void setPlainPassword(String plainPassword) {
         this.plainPassword = plainPassword;
+    }
+
+    public String getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(String sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
     }
 }

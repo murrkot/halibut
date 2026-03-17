@@ -31,6 +31,12 @@ public class ActiveSession {
     @Column(name = "device_id", nullable = false, length = 64)
     private String deviceId;
 
+    @Column(name = "location_id")
+    private Long locationId;
+
+    @Column(name = "location_name", length = 200)
+    private String locationName;
+
     public Long getId() {
         return id;
     }
@@ -73,5 +79,21 @@ public class ActiveSession {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 }

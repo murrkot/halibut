@@ -690,7 +690,13 @@ body,
 .halibut-profile-tabs .halibut-locations-tab .dataGridWidget,
 .halibut-profile-tabs .halibut-locations-tab .dataGridWidget table,
 .halibut-profile-tabs .halibut-locations-tab .dataGridWidget td,
-.halibut-profile-tabs .halibut-locations-tab .dataGridWidget th {
+.halibut-profile-tabs .halibut-locations-tab .dataGridWidget th,
+.halibut-profile-tabs .halibut-audit-tab,
+.halibut-profile-tabs .halibut-audit-tab .halibut-grid,
+.halibut-profile-tabs .halibut-audit-tab .dataGridWidget,
+.halibut-profile-tabs .halibut-audit-tab .dataGridWidget table,
+.halibut-profile-tabs .halibut-audit-tab .dataGridWidget td,
+.halibut-profile-tabs .halibut-audit-tab .dataGridWidget th {
     border: none !important;
     box-shadow: none !important;
 }
@@ -710,14 +716,16 @@ body,
 }
 
 .halibut-users-tab,
-.halibut-locations-tab {
+.halibut-locations-tab,
+.halibut-audit-tab {
     margin: 0 !important;
     padding: 0 !important;
 }
 
 /* Users/Locations tab adaptive layout */
 .halibut-users-tab,
-.halibut-locations-tab {
+.halibut-locations-tab,
+.halibut-audit-tab {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -727,12 +735,14 @@ body,
 }
 
 .halibut-users-tab .menuBar,
-.halibut-locations-tab .menuBar {
+.halibut-locations-tab .menuBar,
+.halibut-audit-tab .menuBar {
     flex: 0 0 auto;
 }
 
 .halibut-users-grid,
-.halibut-locations-grid {
+.halibut-locations-grid,
+.halibut-audit-grid {
     flex: 0 0 auto;
     min-height: 0;
     height: calc(100% - 22px) !important;
@@ -742,12 +752,14 @@ body,
 }
 
 .halibut-users-grid > div,
-.halibut-locations-grid > div {
+.halibut-locations-grid > div,
+.halibut-audit-grid > div {
     height: 95%;
 }
 
 .halibut-users-tab .halibut-profile-status,
-.halibut-locations-tab .halibut-profile-status {
+.halibut-locations-tab .halibut-profile-status,
+.halibut-audit-tab .halibut-profile-status {
     flex: 0 0 auto;
     margin: 0 !important;
     padding-top: 6px;
@@ -765,12 +777,14 @@ body,
 .halibut-profile-tabs,
 .halibut-profile-tabs .gwt-TabPanelBottom,
 .halibut-users-tab,
-.halibut-locations-tab {
+.halibut-locations-tab,
+.halibut-audit-tab {
     overflow: hidden !important;
 }
 
 .halibut-users-grid .dataGridWidget,
-.halibut-locations-grid .dataGridWidget {
+.halibut-locations-grid .dataGridWidget,
+.halibut-audit-grid .dataGridWidget {
     height: 100% !important;
     overflow-y: auto !important;
     overflow-x: auto !important;
@@ -781,7 +795,8 @@ body,
 
 
 .halibut-users-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel,
-.halibut-locations-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel {
+.halibut-locations-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel,
+.halibut-audit-tab .com-google-gwt-user-client-ui-CustomScrollPanel-Style-customScrollPanel {
     height: calc(100% - 1px) !important;
 }
 

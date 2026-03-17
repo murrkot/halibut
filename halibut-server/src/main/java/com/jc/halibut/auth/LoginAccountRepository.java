@@ -18,6 +18,7 @@ import java.util.Optional;
 public class LoginAccountRepository {
     private static final String DEFAULT_PASSWORD_HASH =
             "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb";
+    private static final String DEFAULT_SESSION_TIMEOUT = "30m";
 
     private final SessionFactory sessionFactory;
 
@@ -64,6 +65,9 @@ public class LoginAccountRepository {
 
     public boolean saveLoginAccount(LoginAccountDto account) {
         if (account == null || isBlank(account.getUsername()) || isBlank(account.getDisplayName())) {
+            return false;
+        }
+        if (!isValidSessionTimeout(account.getSessionTimeout())) {
             return false;
         }
 
@@ -236,6 +240,7 @@ public class LoginAccountRepository {
 
         entity.setAutoSessionRestoreEnabled(dto.isAutoSessionRestoreEnabled());
         entity.setActive(dto.isActive());
+        entity.setSessionTimeout(normalizeSessionTimeout(dto.getSessionTimeout()));
     }
 
     private LoginAccount createAccount(SeedAccount seed) {
@@ -245,6 +250,7 @@ public class LoginAccountRepository {
         account.setPasswordHash(seed.passwordHash());
         account.setRole(seed.role());
         account.setAutoSessionRestoreEnabled(seed.autoSessionRestoreEnabled());
+        account.setSessionTimeout(normalizeSessionTimeout(seed.sessionTimeout()));
         account.setActive(true);
         return account;
     }
@@ -267,7 +273,38 @@ public class LoginAccountRepository {
         return value == null || value.trim().isEmpty();
     }
 
+    private String normalizeSessionTimeout(String raw) {
+        if (isBlank(raw)) {
+            return DEFAULT_SESSION_TIMEOUT;
+        }
+        String trimmed = raw.trim().toLowerCase();
+        if ("1h".equals(trimmed) || "60m".equals(trimmed)) {
+            return "1h";
+        }
+        return trimmed;
+    }
+
+    private boolean isValidSessionTimeout(String raw) {
+        if (isBlank(raw)) {
+            return true;
+        }
+        String trimmed = raw.trim().toLowerCase();
+        if ("1h".equals(trimmed) || "60m".equals(trimmed)) {
+            return true;
+        }
+        if (!trimmed.endsWith("m")) {
+            return false;
+        }
+        String minutesPart = trimmed.substring(0, trimmed.length() - 1);
+        try {
+            int minutes = Integer.parseInt(minutesPart);
+            return minutes >= 1 && minutes <= 59;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
     public record SeedAccount(String username, String passwordHash, String displayName, LoginRole role,
-                              boolean autoSessionRestoreEnabled) {
+                              boolean autoSessionRestoreEnabled, String sessionTimeout) {
     }
 }

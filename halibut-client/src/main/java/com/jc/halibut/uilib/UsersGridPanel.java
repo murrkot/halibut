@@ -104,6 +104,8 @@ public class UsersGridPanel extends FlowPanel {
                 GridColumnDescriptor.sortable("Role", 120,
                         dto -> dto.getRole() == null ? "" : dto.getRole().name(),
                         Comparator.comparing(dto -> dto.getRole() == null ? "" : dto.getRole().name())),
+                GridColumnDescriptor.of("Session Timeout", 140,
+                        dto -> dto.getSessionTimeout() == null ? "" : dto.getSessionTimeout()),
                 GridColumnDescriptor.of("Auto Restore", 120,
                         dto -> dto.isAutoSessionRestoreEnabled() ? "Enabled" : "Disabled"),
                 GridColumnDescriptor.of("Active", 100,
@@ -376,6 +378,7 @@ public class UsersGridPanel extends FlowPanel {
         dto.setRole(source.getRole());
         dto.setAutoSessionRestoreEnabled(source.isAutoSessionRestoreEnabled());
         dto.setActive(source.isActive());
+        dto.setSessionTimeout(source.getSessionTimeout());
         return dto;
     }
 

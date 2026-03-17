@@ -3,6 +3,7 @@ package com.jc.halibut;
 import com.jc.halibut.Entity.LoginAccount;
 import com.jc.halibut.Entity.LoginRole;
 import com.jc.halibut.auth.ActiveSessionRepository;
+import com.jc.halibut.auth.AuditEventRepository;
 import com.jc.halibut.auth.LoginAccountMapper;
 import com.jc.halibut.auth.LoginAccountRepository;
 import com.jc.halibut.dto.LoginAccountDto;
@@ -30,6 +31,8 @@ class LoginServiceImplTest {
     private ActiveSessionRepository activeSessionRepository;
     @Mock
     private LoginAccountMapper loginAccountMapper;
+    @Mock
+    private AuditEventRepository auditEventRepository;
 
     private LoginServiceImpl service;
 
@@ -39,7 +42,7 @@ class LoginServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new LoginServiceImpl(accountRepository, activeSessionRepository, loginAccountMapper);
+        service = new LoginServiceImpl(accountRepository, activeSessionRepository, loginAccountMapper, auditEventRepository);
     }
 
     private void mockAuthorizedSession(LoginRole role) {

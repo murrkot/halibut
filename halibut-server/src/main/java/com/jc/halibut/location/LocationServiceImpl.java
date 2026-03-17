@@ -54,7 +54,9 @@ public class LocationServiceImpl extends RemoteServiceServlet implements Locatio
         if (!isAuthorizedForLocationManagement(userId, sessionId, securityToken)) {
             return null;
         }
-        return locationMapper.toDto(locationRepository.findById(locationId));
+        LocationDto location = locationMapper.toDto(locationRepository.findById(locationId));
+        updateSessionLocation(userId, sessionId, securityToken, location);
+        return location;
     }
 
     @Override
@@ -73,6 +75,19 @@ public class LocationServiceImpl extends RemoteServiceServlet implements Locatio
             return false;
         }
         return locationRepository.deleteLocation(locationId);
+    }
+
+    private void updateSessionLocation(Long userId, String sessionId, String securityToken, LocationDto location) {
+        if (location == null) {
+            return;
+        }
+        activeSessionRepository.updateSessionLocation(
+                userId,
+                sessionId,
+                securityToken,
+                location.getId(),
+                location.getName()
+        );
     }
 
     private boolean isAuthorizedForLocationManagement(Long userId, String sessionId, String securityToken) {

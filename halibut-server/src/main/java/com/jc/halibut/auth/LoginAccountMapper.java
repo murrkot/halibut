@@ -25,7 +25,8 @@ public class LoginAccountMapper {
                 entity.getDisplayName(),
                 role,
                 entity.isAutoSessionRestoreEnabled(),
-                entity.isActive()
+                entity.isActive(),
+                entity.getSessionTimeout()
         );
     }
 

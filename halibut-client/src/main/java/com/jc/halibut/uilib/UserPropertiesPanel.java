@@ -21,6 +21,8 @@ public class UserPropertiesPanel extends DialogBox {
 
     private final TextBox usernameBox = new TextBox();
     private final TextBox displayNameBox = new TextBox();
+    private final TextBox sessionTimeoutBox = new TextBox();
+    private final Label sessionTimeoutHintLabel = new Label();
     private final PasswordTextBox passwordBox = new PasswordTextBox();
     private final PasswordTextBox confirmPasswordBox = new PasswordTextBox();
     private final Label passwordHintLabel = new Label();
@@ -54,6 +56,16 @@ public class UserPropertiesPanel extends DialogBox {
         displayNameBox.setStylePrimaryName(RESOURCES.style().input());
         displayNameBox.setText(nullSafe(workingCopy.getDisplayName()));
         root.add(displayNameBox);
+
+        root.add(new Label("Session Timeout"));
+        sessionTimeoutBox.setStylePrimaryName(RESOURCES.style().input());
+        sessionTimeoutBox.getElement().setAttribute("placeholder", "e.g. 30m or 1h");
+        sessionTimeoutBox.setText(nullSafe(workingCopy.getSessionTimeout()));
+        root.add(sessionTimeoutBox);
+
+        sessionTimeoutHintLabel.setStyleName(RESOURCES.style().hint());
+        sessionTimeoutHintLabel.setText("Allowed: 1-59m or 1h (60m).");
+        root.add(sessionTimeoutHintLabel);
 
         root.add(new Label("Password"));
         passwordBox.setStylePrimaryName(RESOURCES.style().input());
@@ -117,6 +129,7 @@ public class UserPropertiesPanel extends DialogBox {
     private boolean readForm() {
         String username = trimToEmpty(usernameBox.getText());
         String displayName = trimToEmpty(displayNameBox.getText());
+        String sessionTimeout = trimToEmpty(sessionTimeoutBox.getText());
         String password = trimToEmpty(passwordBox.getText());
         String confirmPassword = trimToEmpty(confirmPasswordBox.getText());
 
@@ -127,6 +140,11 @@ public class UserPropertiesPanel extends DialogBox {
 
         if (displayName.isEmpty()) {
             messageLabel.setText("Display Name is required.");
+            return false;
+        }
+
+        if (!sessionTimeout.isEmpty() && !isValidSessionTimeout(sessionTimeout)) {
+            messageLabel.setText("Session Timeout must be 1-59m or 1h.");
             return false;
         }
 
@@ -152,6 +170,7 @@ public class UserPropertiesPanel extends DialogBox {
 
         workingCopy.setUsername(username);
         workingCopy.setDisplayName(displayName);
+        workingCopy.setSessionTimeout(normalizeSessionTimeout(sessionTimeout));
 
         int roleIndex = roleBox.getSelectedIndex();
         String roleValue = roleIndex >= 0 ? roleBox.getValue(roleIndex) : LoginAccountRole.USER.name();
@@ -190,6 +209,7 @@ public class UserPropertiesPanel extends DialogBox {
         dto.setAutoSessionRestoreEnabled(source.isAutoSessionRestoreEnabled());
         dto.setActive(source.isActive());
         dto.setPlainPassword(source.getPlainPassword());
+        dto.setSessionTimeout(source.getSessionTimeout());
         return dto;
     }
 
@@ -199,5 +219,36 @@ public class UserPropertiesPanel extends DialogBox {
 
     private String nullSafe(String value) {
         return value == null ? "" : value;
+    }
+
+    private boolean isValidSessionTimeout(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return true;
+        }
+        String trimmed = value.trim().toLowerCase();
+        if ("1h".equals(trimmed) || "60m".equals(trimmed)) {
+            return true;
+        }
+        if (!trimmed.endsWith("m")) {
+            return false;
+        }
+        String minutesPart = trimmed.substring(0, trimmed.length() - 1);
+        try {
+            int minutes = Integer.parseInt(minutesPart);
+            return minutes >= 1 && minutes <= 59;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    private String normalizeSessionTimeout(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return "30m";
+        }
+        String trimmed = value.trim().toLowerCase();
+        if ("60m".equals(trimmed)) {
+            return "1h";
+        }
+        return trimmed;
     }
 }

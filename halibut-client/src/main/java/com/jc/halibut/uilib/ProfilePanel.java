@@ -20,6 +20,7 @@ public class ProfilePanel extends FlowPanel {
     private final TabPanel tabs = new TabPanel();
     private UsersGridPanel usersGridPanel;
     private LocationsGridPanel locationsGridPanel;
+    private AuditLogGridPanel auditLogGridPanel;
 
     private final Button dashboardButton = new Button("Dashboard");
     private final Button logoutButton = new Button("Logout");
@@ -52,6 +53,9 @@ public class ProfilePanel extends FlowPanel {
                 if (selectedWidget == locationsGridPanel && locationsGridPanel != null) {
                     locationsGridPanel.refreshDisplay();
                 }
+                if (selectedWidget == auditLogGridPanel && auditLogGridPanel != null) {
+                    auditLogGridPanel.refreshDisplay();
+                }
             }
         });
         middleArea.add(tabs);
@@ -75,6 +79,7 @@ public class ProfilePanel extends FlowPanel {
         tabs.clear();
         usersGridPanel = null;
         locationsGridPanel = null;
+        auditLogGridPanel = null;
 
         String normalizedRole = role == null ? "USER" : role.trim().toUpperCase();
         switch (normalizedRole) {
@@ -82,17 +87,17 @@ public class ProfilePanel extends FlowPanel {
                 tabs.add(buildUsersTab(), "Users");
                 tabs.add(buildLocationsTab(), "Locations");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
-                tabs.add(buildSecurityTab(), "Security");
+                tabs.add(buildSecurityTab(true), "Security");
                 break;
             case "MANAGER":
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
-                tabs.add(buildSecurityTab(), "Security");
+                tabs.add(buildSecurityTab(false), "Security");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Team-level controls and management reports.</div>"), "Team");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Manager operations and approvals.</div>"), "Operations");
                 break;
             default:
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>General account information.</div>"), "General");
-                tabs.add(buildSecurityTab(), "Security");
+                tabs.add(buildSecurityTab(false), "Security");
                 tabs.add(new HTML("<div class='halibut-profile-tab-content'>Personal settings and preferences.</div>"), "Personal");
                 break;
         }
@@ -100,7 +105,12 @@ public class ProfilePanel extends FlowPanel {
         tabs.selectTab(0);
     }
 
-    private FlowPanel buildSecurityTab() {
+    private Widget buildSecurityTab(boolean includeAuditLog) {
+        if (includeAuditLog) {
+            auditLogGridPanel = new AuditLogGridPanel();
+            return auditLogGridPanel;
+        }
+
         FlowPanel securityTab = new FlowPanel();
         securityTab.setStyleName("halibut-profile-tab-content halibut-profile-preferences");
         securityTab.add(autoRestoreCheckBox);
